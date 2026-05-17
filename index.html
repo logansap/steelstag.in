@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteelStag — Color. Nothing else.</title>
+  <meta name="description" content="SteelStag. Premium solid color tees. Launching soon." />
+  <meta property="og:title" content="SteelStag — Color. Nothing else." />
+  <meta property="og:description" content="Premium solid color tees. Launching soon at steelstag.in" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #1a1a1a;
+      --mist:    #f4f3f1;
+      --steel:   #6b7280;
+      --accent:  #2d2d2d;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--mist);
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── Color bar ── */
+    .color-strip {
+      display: flex;
+      height: 4px;
+      width: 100%;
+    }
+    .color-strip span {
+      flex: 1;
+    }
+
+    /* Curated palette — solid tees reference */
+    .c1  { background: #2c3e50; }
+    .c2  { background: #34495e; }
+    .c3  { background: #7f8c8d; }
+    .c4  { background: #95a5a6; }
+    .c5  { background: #bdc3c7; }
+    .c6  { background: #ecf0f1; }
+    .c7  { background: #e8ddd0; }
+    .c8  { background: #c8a98a; }
+    .c9  { background: #a0522d; }
+    .c10 { background: #6b4226; }
+    .c11 { background: #4a2c17; }
+    .c12 { background: #1a1a1a; }
+
+    /* ── Main layout ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      margin-bottom: 2.5rem;
+    }
+
+    .logo img {
+      width: clamp(160px, 30vw, 260px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      /* logo is silver/grey — darken slightly on warm bg */
+      filter: brightness(0.85) contrast(1.1);
+    }
+
+    .logo-rule {
+      width: 40px;
+      height: 1px;
+      background: var(--steel);
+      margin: 1rem auto 0;
+    }
+
+    /* ── Tagline ── */
+    .tagline {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── Color swatches ── */
+    .swatches {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+    .swatch:hover {
+      transform: scale(1.2);
+    }
+
+    /* ── CTA ── */
+    .cta-block {
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .cta-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 1rem;
+    }
+
+    .email-form {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--ink);
+      overflow: hidden;
+    }
+
+    .email-form input {
+      flex: 1;
+      padding: 0.85rem 1.1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .email-form input::placeholder {
+      color: var(--steel);
+    }
+
+    .email-form button {
+      padding: 0.85rem 1.4rem;
+      background: var(--ink);
+      color: var(--mist);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .email-form button:hover {
+      background: var(--accent);
+    }
+
+    .form-note {
+      margin-top: 0.75rem;
+      font-size: 0.7rem;
+      color: var(--steel);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Success state ── */
+    .success-msg {
+      display: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--ink);
+      padding: 1rem 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--steel);
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      margin: 0 0.75rem;
+    }
+
+    footer a:hover {
+      color: var(--ink);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .email-form {
+        flex-direction: column;
+      }
+      .email-form button {
+        padding: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Thin color bar at top -->
+  <div class="color-strip" aria-hidden="true">
+    <span class="c1"></span><span class="c2"></span><span class="c3"></span>
+    <span class="c4"></span><span class="c5"></span><span class="c6"></span>
+    <span class="c7"></span><span class="c8"></span><span class="c9"></span>
+    <span class="c10"></span><span class="c11"></span><span class="c12"></span>
+  </div>
+
+  <main>
+
+    <div class="logo">
+      <img src="logo.png" alt="SteelStag" />
+      <div class="logo-rule"></div>
+    </div>
+
+    <p class="tagline">Color. Nothing else.</p>
+
+    <!-- Color swatches preview -->
+    <div class="swatches" aria-label="Upcoming colorways">
+      <div class="swatch" style="background:#2c3e50" title="Midnight Slate"></div>
+      <div class="swatch" style="background:#4a5568" title="Storm"></div>
+      <div class="swatch" style="background:#718096" title="Ash"></div>
+      <div class="swatch" style="background:#a0aec0" title="Mist"></div>
+      <div class="swatch" style="background:#e2e8f0" title="White Smoke"></div>
+      <div class="swatch" style="background:#f7f0e6" title="Bone"></div>
+      <div class="swatch" style="background:#d4a574" title="Sand"></div>
+      <div class="swatch" style="background:#c8956c" title="Terracotta"></div>
+      <div class="swatch" style="background:#8b4513" title="Burnt Sienna"></div>
+      <div class="swatch" style="background:#2d3748" title="Charcoal"></div>
+      <div class="swatch" style="background:#1a1a1a" title="Onyx"></div>
+    </div>
+
+    <div class="cta-block">
+      <p class="cta-label">Launching soon</p>
+
+      <form class="email-form" id="notifyForm" onsubmit="handleSubmit(event)">
+        <input
+          type="email"
+          id="emailInput"
+          placeholder="your@email.com"
+          required
+          autocomplete="email"
+          aria-label="Email address"
+        />
+        <button type="submit">Notify me</button>
+      </form>
+
+      <div class="success-msg" id="successMsg">
+        You're on the list. We'll be in touch.
+      </div>
+
+      <p class="form-note">No spam. Just the drop.</p>
+    </div>
+
+  </main>
+
+  <footer>
+    <span>&copy; 2026 SteelStag</span>
+    &nbsp;&middot;&nbsp;
+    <a href="https://instagram.com/steelstag" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://facebook.com/steelstag" target="_blank" rel="noopener">Facebook</a>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('notifyForm');
+      const msg  = document.getElementById('successMsg');
+      // TODO: wire to Mailchimp / Klaviyo / Formspree endpoint
+      form.style.display = 'none';
+      msg.style.display  = 'block';
+    }
+  </script>
+
+</body>
+</html>
