@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteelStag — Social Media Kit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:   #1a1a1a;
+      --mist:  #f4f3f1;
+      --steel: #6b7280;
+      --light: #e5e7eb;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0eeec;
+      color: var(--ink);
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 2.5rem;
+    }
+    .section {
+      margin-bottom: 3.5rem;
+    }
+    .section-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--steel);
+      border-bottom: 1px solid var(--light);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── Cover templates ─── */
+    .covers {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Instagram profile pic — 320×320 display */
+    .insta-avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #2c3e50 0%, #718096 60%, #c8956c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .insta-avatar img {
+      width: 120px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Facebook cover — 820×312 ratio ≈ 2.63:1 */
+    .fb-cover {
+      width: 640px;
+      height: 243px;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .fb-cover-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 1;
+    }
+    .fb-cover-left img {
+      width: 100px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+    .fb-cover-tagline {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .fb-cover-swatches {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .fb-cover-swatches span {
+      display: block;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+    }
+    /* decorative gradient blob */
+    .fb-cover::after {
+      content: '';
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,116,139,0.35) 0%, transparent 70%);
+    }
+
+    /* Instagram square post — 1080×1080 ratio */
+    .insta-post {
+      width: 320px;
+      height: 320px;
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .insta-post img {
+      width: 120px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+    .insta-post-text {
+      text-align: center;
+    }
+    .insta-post-text .headline {
+      font-size: 0.9rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .insta-post-text .sub {
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+    }
+    .insta-post-swatches {
+      display: flex;
+      gap: 7px;
+    }
+    .insta-post-swatches span {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* ─── Copy blocks ─── */
+    .copy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .copy-card {
+      background: #fff;
+      border: 1px solid var(--light);
+      padding: 1.2rem 1.4rem;
+    }
+    .copy-card h3 {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 0.75rem;
+    }
+    .copy-card p, .copy-card ul {
+      font-size: 0.82rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+    .copy-card ul {
+      padding-left: 1.1rem;
+    }
+    .copy-card .hashtags {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--steel);
+      line-height: 1.6;
+    }
+
+    /* ─── Handle note ─── */
+    .handle-note {
+      background: #fff3cd;
+      border-left: 3px solid #f59e0b;
+      padding: 0.8rem 1rem;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ─── Print note ─── */
+    .print-note {
+      font-size: 0.68rem;
+      color: var(--steel);
+      letter-spacing: 0.05em;
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>SteelStag — Social Media Kit</h1>
+
+<!-- ══════════════════════════════════ HANDLES ══ -->
+<div class="section">
+  <p class="section-title">Handles to claim</p>
+  <div class="handle-note">
+    <strong>Instagram:</strong> instagram.com/steelstag &nbsp;|&nbsp;
+    <strong>Facebook:</strong> facebook.com/steelstag &nbsp;|&nbsp;
+    <strong>Also secure:</strong> @steelstag on X/Twitter, YouTube, Pinterest &mdash; even if you don't plan to use them immediately, claim all to protect the brand.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ VISUALS ══ -->
+<div class="section">
+  <p class="section-title">Visual assets (screenshot to export)</p>
+  <div class="covers">
+
+    <!-- Instagram profile avatar -->
+    <div>
+      <div class="insta-avatar">
+        <img src="logo.png" alt="SteelStag logo" />
+      </div>
+      <p class="print-note">Instagram profile pic · 200px shown · export 320×320</p>
+    </div>
+
+    <!-- Instagram launch post -->
+    <div>
+      <div class="insta-post">
+        <img src="logo.png" alt="SteelStag" />
+        <div class="insta-post-text">
+          <div class="headline">Color. Nothing else.</div>
+          <div class="sub">steelstag.in &nbsp;·&nbsp; coming soon</div>
+        </div>
+        <div class="insta-post-swatches">
+          <span style="background:#2c3e50"></span>
+          <span style="background:#718096"></span>
+          <span style="background:#a0aec0"></span>
+          <span style="background:#e2e8f0"></span>
+          <span style="background:#d4a574"></span>
+          <span style="background:#8b4513"></span>
+          <span style="background:#1a1a1a"></span>
+        </div>
+      </div>
+      <p class="print-note">Instagram launch post · 320px shown · export 1080×1080</p>
+    </div>
+
+    <!-- Facebook cover -->
+    <div>
+      <div class="fb-cover">
+        <div class="fb-cover-left">
+          <img src="logo.png" alt="SteelStag" />
+          <div class="fb-cover-tagline">Color. Nothing else.</div>
+          <div class="fb-cover-swatches">
+            <span style="background:#2c3e50"></span>
+            <span style="background:#718096"></span>
+            <span style="background:#d4a574"></span>
+            <span style="background:#8b4513"></span>
+            <span style="background:#1a1a1a"></span>
+          </div>
+        </div>
+      </div>
+      <p class="print-note">Facebook cover · 640px shown · export 820×312</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ COPY ══ -->
+<div class="section">
+  <p class="section-title">Profile copy</p>
+  <div class="copy-grid">
+
+    <div class="copy-card">
+      <h3>Instagram bio</h3>
+      <p>
+        SteelStag<br />
+        Premium solid color tees.<br />
+        Color. Nothing else.<br />
+        🔗 steelstag.in
+      </p>
+    </div>
+
+    <div class="copy-card">
+      <h3>Facebook page description (short)</h3>
+      <p>SteelStag — Premium solid color tees. No prints, no noise. Just color done right. Shop at steelstag.in</p>
+    </div>
+
+    <div class="copy-card">
+      <h3>Facebook page description (long — "About")</h3>
+      <p>
+        SteelStag was built on one idea: that a perfectly cut tee in a solid, considered color is all you need.
+        No graphics. No slogans. Just color done right — in weights and fits that feel like a second skin.
+        We obsess over pigment, fabric, and form so you don't have to think about it.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ LAUNCH POSTS ══ -->
+<div class="section">
+  <p class="section-title">Launch post copy</p>
+  <div class="copy-grid">
+
+    <div class="copy-card">
+      <h3>Instagram — announcement post</h3>
+      <p>
+        Something is coming.<br /><br />
+        Solid colors. Premium weight. Nothing extra.<br /><br />
+        SteelStag launches soon.<br />
+        Link in bio to get notified first.
+      </p>
+      <p class="hashtags">
+        #SteelStag #SolidColorTees #MinimalistFashion #PremiumBasics
+        #ColorNothingElse #TeeDropIndia #WardrobeEssentials #SlowFashionIndia
+      </p>
+    </div>
+
+    <div class="copy-card">
+      <h3>Instagram — color teaser post</h3>
+      <p>
+        Eleven colors. One cut. Zero compromise.<br /><br />
+        Swipe to see the palette dropping with our launch.<br />
+        Which one is yours?<br /><br />
+        &rarr; steelstag.in
+      </p>
+      <p class="hashtags">
+        #SteelStag #ColorDrop #SolidTees #EverydayEssentials #WearTheColor
+      </p>
+    </div>
+
+    <div class="copy-card">
+      <h3>Facebook — page launch post</h3>
+      <p>
+        We're SteelStag, and we're almost here.<br /><br />
+        Premium solid color tees — built for people who know that less is more.
+        No prints, no fuss. Just the colors that matter, in a fit that holds.<br /><br />
+        Visit steelstag.in and get on the list before we launch.
+      </p>
+    </div>
+
+    <div class="copy-card">
+      <h3>Story / Reel caption (short)</h3>
+      <p>Color. Nothing else. 🦌<br />steelstag.in — launching soon.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ CHECKLIST ══ -->
+<div class="section">
+  <p class="section-title">Setup checklist</p>
+  <div class="copy-card">
+    <h3>Instagram</h3>
+    <ul>
+      <li>Create account &rarr; username: <strong>steelstag</strong></li>
+      <li>Account type: Creator or Business (enables analytics)</li>
+      <li>Profile photo: export the avatar above at 320×320 PNG</li>
+      <li>Bio: use copy above</li>
+      <li>Link in bio: https://steelstag.in</li>
+      <li>Pinned post: use announcement copy above</li>
+      <li>Story highlight: "Coming Soon" — use launch post card</li>
+    </ul>
+    <br />
+    <h3>Facebook</h3>
+    <ul>
+      <li>Create Page &rarr; Page name: <strong>SteelStag</strong></li>
+      <li>Category: Clothing (Brand)</li>
+      <li>Username / URL: <strong>steelstag</strong></li>
+      <li>Profile photo: same 320×320 avatar PNG</li>
+      <li>Cover photo: export Facebook cover above at 820×312</li>
+      <li>Short description: use copy above</li>
+      <li>About: use long description above</li>
+      <li>Website: https://steelstag.in</li>
+      <li>First post: use Facebook launch post copy above</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>
