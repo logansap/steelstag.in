@@ -206,7 +206,7 @@ LABELS = [
     w=40, h=60, bg='#ffffff',
     css="""
       .label { padding: 12px 10px; gap: 7px; }
-      .brand  { font-family: Inter, sans-serif; font-weight: 600; font-size: 9px; letter-spacing: 0.08em; color: var(--ink); }
+      .brand  { font-family: Goldman, sans-serif; font-weight: 400; font-size: 9px; letter-spacing: 0.08em; color: var(--ink); }
       .div    { width: 100%; height: 1px; background: var(--light); }
       .icons  { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
       .fabric { font-size: 6.5px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--steel); text-align: center; line-height: 1.7; font-family: Inter, sans-serif; }
