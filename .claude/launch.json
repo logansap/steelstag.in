@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "steelstag-site",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "4455", "."],
+      "runtimeExecutable": "C:\\Users\\anjan\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "runtimeArgs": ["-m", "http.server", "4455"],
       "port": 4455
     }
   ]

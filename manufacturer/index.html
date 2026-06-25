@@ -608,11 +608,97 @@
       .recommended-download { flex-direction: column; align-items: stretch; }
       .floating-download { left: 20px; right: 20px; text-align: center; }
     }
+
+    /* ══════════════════════════════════════════════════
+       PRINT / PDF
+       This portal is the single source of truth.
+       Ctrl+P (or the Save as PDF button) generates the
+       Tech Pack. Any new section added to the portal
+       automatically appears in the PDF — no separate
+       document to maintain.
+    ══════════════════════════════════════════════════ */
+    @media print {
+      /* Force all backgrounds and colors to print */
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Page setup */
+      @page {
+        size: A4;
+        margin: 18mm 22mm;
+      }
+      @page :first { margin-top: 14mm; }
+
+      /* Base reset */
+      html { scroll-behavior: auto; }
+      body {
+        display: block;
+        background: white;
+        font-size: 10.5pt;
+        line-height: 1.55;
+        color: #111;
+      }
+
+      /* ── Hide all chrome ── */
+      .sidebar,
+      .floating-download,
+      .topbar,
+      .hero-actions,
+      .recommended-download,
+      #downloads { display: none !important; }
+
+      /* ── Full-width layout ── */
+      .main { margin-left: 0 !important; }
+      .content {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+
+      /* ── Hero: tighten for print ── */
+      .hero { padding: 28pt 0 22pt !important; }
+      .hero-badges { gap: 8px !important; }
+
+      /* ── Sections: headings never orphaned ── */
+      section { margin-bottom: 28pt !important; }
+      h2 { break-after: avoid; font-size: 15pt !important; }
+      h3 { break-after: avoid; font-size: 9.5pt !important; margin-top: 18pt !important; }
+      .section-meta { break-after: avoid; }
+
+      /* ── Tables: rows never split, whole small tables stay together ── */
+      table { break-inside: avoid; width: 100% !important; }
+      thead { display: table-header-group; } /* repeat header on page break */
+      tr    { break-inside: avoid; }
+
+      /* ── Small blocks stay together ── */
+      .workflow-step { break-inside: avoid; }
+      .pillar        { break-inside: avoid; }
+      .contact-card  { break-inside: avoid; }
+      .callout       { break-inside: avoid; }
+      .label-preview { break-inside: avoid; }
+
+      /* ── Images: constrain for A4 ── */
+      .color-card-row {
+        overflow: visible !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+      }
+      .color-card-row img { height: 130px !important; }
+      .label-preview-row  { flex-wrap: wrap !important; }
+      .label-preview img  { max-width: 110px !important; max-height: 160px !important; }
+      .section-img-aside  { flex-direction: column !important; }
+      .section-img-aside .aside-img { width: 180px !important; }
+
+      /* ── Links: plain text, no underlines ── */
+      a { color: inherit !important; text-decoration: none !important; }
+      a[href]::after { content: none !important; }
+    }
   </style>
 </head>
 <body>
-<a class="floating-download" href="downloads/SteelStag-CompleteManufacturerPackage-SS2026-v1.2.zip" download>
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:inline-block;vertical-align:middle;margin-right:6px"><path d="M6 1v7M3 5l3 3 3-3M1 10h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Download SS2026 Pack</a>
+<button class="floating-download" onclick="window.print()">
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:inline-block;vertical-align:middle;margin-right:6px"><path d="M2 4h8M2 4V2h8v2M2 4v5a1 1 0 001 1h6a1 1 0 001-1V4M4 8h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Save as PDF</button>
 
 <!-- ══ SIDEBAR ══ -->
 <aside class="sidebar" id="sidebar">
@@ -651,8 +737,13 @@
     <h1>SteelStag SS2026</h1>
     <p>Everything required to quote, sample, and produce the SS2026 collection.</p>
     <div class="hero-actions">
-      <a class="primary-download" href="downloads/SteelStag-CompleteManufacturerPackage-SS2026-v1.2.zip" download>⬇ Download Complete Manufacturer Package</a>
-      <div class="primary-download-note">Recommended first download · ZIP · Tech Pack, quantity breakdown, labels, packaging and artwork references · v1.2</div>
+      <button class="primary-download" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline-block;vertical-align:middle;margin-right:8px"><path d="M2 5h10M2 5V3h10v2M2 5v6a1 1 0 001 1h8a1 1 0 001-1V5M5 9h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Save Tech Pack as PDF
+      </button>
+      <div class="primary-download-note" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <span>This portal is always current — print generates the Tech Pack PDF</span>
+        <a href="downloads/SteelStag-CompleteManufacturerPackage-SS2026-v1.2.zip" download style="color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:1px;white-space:nowrap;">⬇ Download Assets ZIP</a>
+      </div>
     </div>
     <div class="hero-badges">
       <div class="hero-badge"><strong>Collection</strong> SS2026</div>
@@ -726,12 +817,12 @@
           <div class="dl-row-icon">📄</div>
           <div class="dl-row-body">
             <h4>Technical Pack — SS2026</h4>
-            <p>Garment specifications: fabric, construction, measurements, stitch spec, and label placement.</p>
+            <p>This portal is the Tech Pack. Always current — no separate file to download.</p>
           </div>
           <div class="dl-row-meta">
-            <span class="badge badge-version">v1.0</span>
+            <span class="badge badge-current">Live</span>
             <span class="dl-row-size">PDF</span>
-            <a class="dl-btn" href="downloads/SteelStag-TechPack-SS2026-v1.0.pdf" download>Download</a>
+            <button class="dl-btn" onclick="window.print()" style="cursor:pointer;background:none;font-family:inherit;">Save as PDF</button>
           </div>
         </div>
 
