@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SteelStag — Label Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Goldman&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, sans-serif;
+      background: #f0eeec;
+      color: #1a1a1a;
+      padding: 2.5rem 2rem 4rem;
+    }
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid #d4d0cc;
+      padding-bottom: 1.25rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+    }
+    header h1 {
+      font-family: Goldman, sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+    }
+    header span {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+    .section {
+      margin-bottom: 3rem;
+    }
+    .section-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e0ddd9;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e0ddd9;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      background: #fff;
+    }
+    .card-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #6b7280;
+      text-align: center;
+    }
+    /* Neck labels are small — show at 2× */
+    .neck img    { width: 190px; }
+    /* Wash care */
+    .washcare img { width: 160px; }
+    /* Size stickers are tiny */
+    .sticker img  { width: 100px; }
+    /* Hang tags */
+    .hangtag img  { width: 200px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>SteelStag&#x2122;</h1>
+  <span>Label Viewer · SS2026</span>
+</header>
+
+<!-- Neck Labels -->
+<div class="section">
+  <p class="section-title">Neck Labels · 50×30mm · 4 sizes</p>
+  <div class="grid">
+    <div class="card neck">
+      <img src="02-Labels/Neck-Labels/NeckLabel-S-300dpi.png" alt="Neck S" />
+      <span class="card-label">Size S</span>
+    </div>
+    <div class="card neck">
+      <img src="02-Labels/Neck-Labels/NeckLabel-M-300dpi.png" alt="Neck M" />
+      <span class="card-label">Size M</span>
+    </div>
+    <div class="card neck">
+      <img src="02-Labels/Neck-Labels/NeckLabel-L-300dpi.png" alt="Neck L" />
+      <span class="card-label">Size L</span>
+    </div>
+    <div class="card neck">
+      <img src="02-Labels/Neck-Labels/NeckLabel-XL-300dpi.png" alt="Neck XL" />
+      <span class="card-label">Size XL</span>
+    </div>
+  </div>
+</div>
+
+<!-- Wash Care -->
+<div class="section">
+  <p class="section-title">Wash Care Label · 40×60mm</p>
+  <div class="grid">
+    <div class="card washcare white-bg">
+      <img src="02-Labels/Wash-Care/WashCareLabel-300dpi.png" alt="Wash Care" />
+      <span class="card-label">Wash Care</span>
+    </div>
+  </div>
+</div>
+
+<!-- Size Stickers -->
+<div class="section">
+  <p class="section-title">Size Stickers · 4 sizes</p>
+  <div class="grid">
+    <div class="card sticker">
+      <img src="02-Labels/Size-Stickers/SizeSticker-S-300dpi.png" alt="Sticker S" />
+      <span class="card-label">S</span>
+    </div>
+    <div class="card sticker">
+      <img src="02-Labels/Size-Stickers/SizeSticker-M-300dpi.png" alt="Sticker M" />
+      <span class="card-label">M</span>
+    </div>
+    <div class="card sticker">
+      <img src="02-Labels/Size-Stickers/SizeSticker-L-300dpi.png" alt="Sticker L" />
+      <span class="card-label">L</span>
+    </div>
+    <div class="card sticker">
+      <img src="02-Labels/Size-Stickers/SizeSticker-XL-300dpi.png" alt="Sticker XL" />
+      <span class="card-label">XL</span>
+    </div>
+  </div>
+</div>
+
+<!-- Hang Tags -->
+<div class="section">
+  <p class="section-title">Hang Tags · 50×85mm · Front &amp; Back</p>
+  <div class="grid">
+    <div class="card hangtag">
+      <img src="02-Labels/Hang-Tags/HangTag-Front-300dpi.png" alt="Hang Tag Front" />
+      <span class="card-label">Front</span>
+    </div>
+    <div class="card hangtag">
+      <img src="02-Labels/Hang-Tags/HangTag-Back-300dpi.png" alt="Hang Tag Back" />
+      <span class="card-label">Back</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

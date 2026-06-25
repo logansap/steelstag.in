@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+._.DS_Store
+._*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Backups
+*.bak
+
+# Archives (large, generated)
+*.zip
+
+# Generated label PNGs in ManufacturerPack (copies live in manufacturer/assets/)
+SteelStag-ManufacturerPack-SS2026/02-Labels/**/*.png
+SteelStag-ManufacturerPack-SS2026/04-ColorReference/*.png
+
+# Temp/review folders
+C:/Temp/
