@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Goldman&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -81,8 +81,7 @@
       height: auto;
       display: block;
       margin: 0 auto;
-      /* logo is silver/grey — darken slightly on warm bg */
-      filter: brightness(0.85) contrast(1.1);
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
     }
 
     .logo-rule {
@@ -189,7 +188,7 @@
     /* ── Success state ── */
     .success-msg {
       display: none;
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Inter', sans-serif;
       font-weight: 300;
       font-size: 1.1rem;
       letter-spacing: 0.1em;
@@ -251,10 +250,10 @@
     <!-- Color swatches preview -->
     <div class="swatches" aria-label="Upcoming colorways">
       <div class="swatch" style="background:#1a1a1a" title="Jet Black"></div>
-      <div class="swatch" style="background:#f5f2ee" title="Bright White"></div>
-      <div class="swatch" style="background:#2a7b72" title="Seaport Teal"></div>
-      <div class="swatch" style="background:#d4621a" title="Wild Ginger"></div>
-      <div class="swatch" style="background:#8b4f2a" title="Brown Sugar"></div>
+      <div class="swatch" style="background:#EDE8E0" title="Bright White"></div>
+      <div class="swatch" style="background:#3A9B8C" title="Seaport Teal"></div>
+      <div class="swatch" style="background:#C97B3A" title="Wild Ginger"></div>
+      <div class="swatch" style="background:#8B4A2B" title="Brown Sugar"></div>
     </div>
 
     <div class="cta-block">
@@ -282,7 +281,7 @@
   </main>
 
   <footer>
-    <span>&copy; 2026 SteelStag</span>
+    <span style="font-family: Goldman, sans-serif; font-weight: 400;">SteelStag&#x2122;</span> <span>2026</span>
     &nbsp;&middot;&nbsp;
     <a href="mailto:hello@steelstag.in">hello@steelstag.in</a>
     &nbsp;&middot;&nbsp;
