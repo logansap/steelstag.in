@@ -4,8 +4,8 @@
     {
       "name": "steelstag-site",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "4456", "."],
-      "port": 4456
+      "runtimeArgs": ["serve", "-l", "4455", "."],
+      "port": 4455
     }
   ]
 }
