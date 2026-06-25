@@ -280,8 +280,6 @@ LABELS = [
     css="""
       .label { gap: 0; }
       .hole  { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #555; margin-top: 14px; flex-shrink: 0; background: #141414; }
-      .logo-top { width: 100%; display: flex; align-items: center; justify-content: center; padding: 10px 0 6px; }
-      .logo-top img { width: 70px; height: auto; opacity: 0.85; }
       .back-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 8px 20px 14px; text-align: center; }
       .gold-rule { width: 30px; height: 1px; background: linear-gradient(90deg, transparent, #b8a98a, transparent); }
       .title { font-family: Oxanium, sans-serif; font-weight: 800; font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.7); }
@@ -291,7 +289,6 @@ LABELS = [
     """,
     html=f"""
       <div class="hole"></div>
-      <div class="logo-top"><img src="http://localhost:{{PORT}}/logo.png" /></div>
       <div class="back-body">
         <div class="gold-rule"></div>
         <div class="title">Care Instructions</div>
