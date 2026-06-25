@@ -456,6 +456,69 @@
 
 
 
+    /* ── Section images ── */
+    .section-img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--light);
+    }
+    .section-img-aside {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      margin-top: 24px;
+    }
+    .section-img-aside .aside-img {
+      flex-shrink: 0;
+      width: 220px;
+    }
+    .section-img-aside .aside-img img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--light);
+    }
+    .section-img-aside .aside-content { flex: 1; min-width: 0; }
+    .color-card-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+    }
+    .color-card-row img {
+      height: 220px;
+      width: auto;
+      flex-shrink: 0;
+      border: 1px solid var(--light);
+      display: block;
+    }
+    .label-preview-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+    .label-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .label-preview img {
+      display: block;
+      border: 1px solid var(--light);
+      background: #fff;
+    }
+    .label-preview span {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
     /* ── Primary download CTA ── */
     .hero-actions {
       display: flex;
@@ -774,12 +837,12 @@
     <section id="colors">
       <h2>Color Standards</h2>
       <div class="section-meta">Pantone TCX references · Lab dip approval required before bulk dyeing</div>
-      <div class="color-row">
-        <div class="color-chip"><div class="color-swatch" style="background:#1a1a1a"></div><div>Jet Black</div><div style="color:#9ca3af">19-0303 TCX</div></div>
-        <div class="color-chip"><div class="color-swatch" style="background:#EDE8E0;border-color:#ccc"></div><div>Bright White</div><div style="color:#9ca3af">11-0601 TCX</div></div>
-        <div class="color-chip"><div class="color-swatch" style="background:#3A9B8C"></div><div>Seaport Teal</div><div style="color:#9ca3af">17-5126 TCX</div></div>
-        <div class="color-chip"><div class="color-swatch" style="background:#C97B3A"></div><div>Wild Ginger</div><div style="color:#9ca3af">15-1157 TCX</div></div>
-        <div class="color-chip"><div class="color-swatch" style="background:#8B4A2B"></div><div>Brown Sugar</div><div style="color:#9ca3af">18-1048 TCX</div></div>
+      <div class="color-card-row">
+        <img src="assets/01-Jet-Black.png" alt="Jet Black — 19-0303 TCX" />
+        <img src="assets/02-Bright-White.png" alt="Bright White — 11-0601 TCX" />
+        <img src="assets/03-Seaport-Teal.png" alt="Seaport Teal — 17-5126 TCX" />
+        <img src="assets/04-Wild-Ginger.png" alt="Wild Ginger — 15-1157 TCX" />
+        <img src="assets/05-Brown-Sugar.png" alt="Brown Sugar — 18-1048 TCX" />
       </div>
       <div class="callout"><strong>Requirement:</strong> Submit lab dips for all 5 colours on approved 125 GSM cotton. Do not bulk dye before written approval.</div>
     </section>
@@ -787,6 +850,24 @@
     <section id="labels">
       <h2>Labels &amp; Branding</h2>
       <div class="section-meta">Use supplied artwork only · Do not re-typeset</div>
+      <div class="label-preview-row">
+        <div class="label-preview">
+          <img src="assets/NeckLabel-M-300dpi.png" alt="Neck Label" style="width:140px" />
+          <span>Neck Label</span>
+        </div>
+        <div class="label-preview">
+          <img src="assets/WashCareLabel-300dpi.png" alt="Wash Care Label" style="width:110px" />
+          <span>Wash Care</span>
+        </div>
+        <div class="label-preview">
+          <img src="assets/HangTag-Front-300dpi.png" alt="Hang Tag Front" style="width:140px" />
+          <span>Hang Tag Front</span>
+        </div>
+        <div class="label-preview">
+          <img src="assets/HangTag-Back-300dpi.png" alt="Hang Tag Back" style="width:140px" />
+          <span>Hang Tag Back</span>
+        </div>
+      </div>
       <table class="spec-table">
         <thead><tr><th>Item</th><th>Type</th><th>Placement</th></tr></thead>
         <tr><td>Neck Label</td><td>Size-specific S / M / L / XL</td><td>Centre back · 1&quot; below collar seam</td></tr>
@@ -799,6 +880,11 @@
     <section id="packaging">
       <h2>Packaging</h2>
       <div class="section-meta">Primary retail packaging specification</div>
+      <div class="section-img-aside">
+        <div class="aside-img">
+          <img src="assets/Packaging-Pouch-Mockup.png" alt="Kraft pouch packaging mockup" />
+        </div>
+        <div class="aside-content">
       <table class="spec-table">
         <tr><td>Type</td><td>Kraft paper standup pouch with zipper seal</td></tr>
         <tr><td>Size</td><td>32 cm × 40 cm</td></tr>
@@ -809,6 +895,8 @@
         <tr><td>Folding</td><td>Standard retail fold · approx. 28 cm × 20 cm</td></tr>
         <tr><td>Sticker</td><td>Size sticker outside pouch · bottom right</td></tr>
       </table>
+        </div>
+      </div>
     </section>
 
     <section id="quality">
@@ -880,6 +968,7 @@
       <h2>Changelog</h2>
       <div class="section-meta">Portal and document revision history</div>
       <div class="changelog">
+        <div class="changelog-entry"><span class="changelog-ver">v1.3</span><span class="changelog-date">25 Jun 2026</span><span class="changelog-desc">Added inline colour swatch card images, label previews, and packaging mockup image. Added missing colour assets to portal.</span></div>
         <div class="changelog-entry"><span class="changelog-ver">v1.2</span><span class="changelog-date">25 Jun 2026</span><span class="changelog-desc">Added prominent above-the-fold complete package download button, recommended first download callout, quick complete ZIP row, and floating download button.</span></div>
         <div class="changelog-entry"><span class="changelog-ver">v1.1</span><span class="changelog-date">25 Jun 2026</span><span class="changelog-desc">Simplified manufacturer content, removed brand philosophy, updated order quantity to 1,200 pcs, added quantity CSV, removed public personal delivery address.</span></div>
         <div class="changelog-entry"><span class="changelog-ver">v1.0</span><span class="changelog-date">Jun 2026</span><span class="changelog-desc">Initial portal launch with Tech Pack, labels, colour standards, and packaging references.</span></div>
