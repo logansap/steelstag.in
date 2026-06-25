@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteelStag — Manufacturer Portal</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Goldman&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-w:  260px;
+      --ink:        #111111;
+      --muted:      #6b7280;
+      --light:      #e5e7eb;
+      --bg:         #f8f7f5;
+      --white:      #ffffff;
+      --gold:       #b8a98a;
+      --gold-light: #f0ead8;
+      --green:      #16a34a;
+      --sidebar-bg: #111111;
+      --sidebar-fg: rgba(255,255,255,0.65);
+      --sidebar-active: rgba(255,255,255,0.95);
+      --sidebar-section: rgba(255,255,255,0.28);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      display: flex;
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--sidebar-bg);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      scrollbar-width: thin;
+      scrollbar-color: #333 transparent;
+    }
+
+    .sidebar-brand {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-brand .wordmark {
+      font-family: Goldman, sans-serif;
+      font-size: 15px;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+    .sidebar-brand .portal-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 4px;
+    }
+
+    .sidebar-nav { padding: 16px 0 40px; flex: 1; }
+
+    .nav-section {
+      padding: 20px 24px 4px;
+      font-size: 9.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--sidebar-section);
+      font-weight: 600;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 24px;
+      font-size: 12.5px;
+      color: var(--sidebar-fg);
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+      border-left: 2px solid transparent;
+    }
+    .sidebar-nav a:hover {
+      color: var(--sidebar-active);
+      background: rgba(255,255,255,0.05);
+    }
+    .sidebar-nav a.active {
+      color: var(--sidebar-active);
+      border-left-color: var(--gold);
+      background: rgba(184,169,138,0.1);
+    }
+    .sidebar-nav a svg { flex-shrink: 0; opacity: 0.7; }
+
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.7;
+    }
+
+    /* ── Main ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      background: rgba(248,247,245,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--light);
+      padding: 0 48px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 50;
+    }
+    .topbar-breadcrumb {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topbar-breadcrumb span { color: var(--ink); font-weight: 500; }
+    .topbar-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 2px;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .badge-current { background: #dcfce7; color: var(--green); }
+    .badge-version { background: var(--gold-light); color: #7a6945; }
+    .badge-draft   { background: #fef3c7; color: #92400e; }
+
+    /* ── Content sections ── */
+    .content { max-width: 900px; padding: 52px 48px 96px; }
+
+    section { margin-bottom: 72px; scroll-margin-top: 72px; }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .section-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--light);
+    }
+
+    h3 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      margin-top: 32px;
+    }
+    h3:first-child { margin-top: 0; }
+
+    p { color: #374151; margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--ink);
+      color: #fff;
+      padding: 56px 48px;
+      margin-bottom: 0;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: Goldman, sans-serif;
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: #fff;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .hero p {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.6);
+      max-width: 520px;
+      margin-bottom: 28px;
+    }
+    .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-badge {
+      padding: 6px 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+    .hero-badge strong { color: rgba(255,255,255,0.9); margin-right: 6px; }
+
+    /* ── Quick access ── */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--light);
+      border: 1px solid var(--light);
+      margin-bottom: 8px;
+    }
+    .quick-card {
+      background: var(--white);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .quick-card:hover { background: #faf9f7; }
+    .quick-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .quick-card-icon {
+      width: 32px; height: 32px;
+      background: var(--gold-light);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .quick-card-icon svg { color: #7a6945; }
+    .quick-card h4 { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .quick-card p { font-size: 12px; color: var(--muted); margin: 0; }
+    .quick-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+    .quick-card-footer .ver { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; }
+    .dl-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 5px 10px;
+      border: 1px solid var(--ink);
+      transition: background 0.15s, color 0.15s;
+    }
+    .dl-btn:hover { background: var(--ink); color: #fff; }
+    .dl-btn-ghost {
+      color: var(--muted);
+      border-color: var(--light);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* ── Philosophy pillars ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .pillar {
+      border-left: 2px solid var(--gold);
+      padding: 4px 0 4px 16px;
+    }
+    .pillar h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--ink); }
+    .pillar p  { font-size: 12.5px; color: #4b5563; margin: 0; }
+
+    /* ── Workflow steps ── */
+    .workflow { display: flex; flex-direction: column; gap: 0; }
+    .workflow-step {
+      display: flex;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--light);
+      position: relative;
+    }
+    .workflow-step:last-child { border-bottom: none; }
+    .step-num {
+      width: 28px; height: 28px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-body h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .step-body p  { font-size: 12.5px; color: #4b5563; margin: 0; }
+    .step-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .tag-buyer   { background: #eff6ff; color: #1d4ed8; }
+    .tag-factory { background: #f0fdf4; color: #15803d; }
+    .tag-both    { background: var(--gold-light); color: #7a6945; }
+
+    /* ── Spec table ── */
+    .spec-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .spec-table th {
+      text-align: left;
+      padding: 9px 14px;
+      background: var(--ink);
+      color: rgba(255,255,255,0.85);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .spec-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--light);
+      color: #374151;
+    }
+    .spec-table tr:last-child td { border-bottom: none; }
+    .spec-table tr:nth-child(even) td { background: #faf9f7; }
+    .spec-table td:first-child { font-weight: 500; color: var(--ink); width: 38%; }
+
+    /* ── Color swatches ── */
+    .color-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .color-chip {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-align: center;
+    }
+    .color-swatch {
+      width: 40px; height: 40px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* ── Downloads full library ── */
+    .dl-library { display: flex; flex-direction: column; gap: 1px; background: var(--light); border: 1px solid var(--light); }
+    .dl-row {
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+    }
+    .dl-row:hover { background: #faf9f7; }
+    .dl-row-icon {
+      width: 36px; height: 36px;
+      background: var(--bg);
+      border: 1px solid var(--light);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .dl-row-body { flex: 1; min-width: 0; }
+    .dl-row-body h4 { font-size: 13px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dl-row-body p  { font-size: 11.5px; color: var(--muted); margin: 0; }
+    .dl-row-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .dl-row-size { font-size: 11px; color: var(--muted); }
+    .dl-section-header {
+      background: #f3f2f0;
+      padding: 8px 18px;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* ── FAQ ── */
+    .faq-item {
+      border-bottom: 1px solid var(--light);
+      padding: 18px 0;
+    }
+    .faq-item:first-child { padding-top: 0; }
+    .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .faq-q { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
+    .faq-a { font-size: 13px; color: #4b5563; }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .contact-card {
+      border: 1px solid var(--light);
+      padding: 20px;
+      background: var(--white);
+    }
+    .contact-card .role { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .contact-card .name { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+    .contact-card a { display: block; font-size: 12.5px; color: var(--ink); text-decoration: none; margin-bottom: 5px; }
+    .contact-card a:hover { text-decoration: underline; }
+    .contact-card .detail { font-size: 12.5px; color: #4b5563; margin-bottom: 4px; }
+
+    /* ── Callout ── */
+    .callout {
+      border-left: 3px solid var(--gold);
+      background: var(--gold-light);
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #5c4a2a;
+    }
+    .callout strong { color: #3d3015; }
+
+    /* ── Changelog ── */
+    .changelog { display: flex; flex-direction: column; gap: 0; }
+    .changelog-entry {
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--light);
+      font-size: 12.5px;
+    }
+    .changelog-entry:last-child { border-bottom: none; }
+    .changelog-ver { font-weight: 600; color: var(--ink); min-width: 60px; }
+    .changelog-date { color: var(--muted); min-width: 90px; }
+    .changelog-desc { color: #374151; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .hero, .content, .topbar { padding-left: 20px; padding-right: 20px; }
+      .topbar { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="wordmark">SteelStag™</div>
+    <div class="portal-label">Manufacturer Portal</div>
+  </div>
+
+  <nav class="sidebar-nav">
+
+    <div class="nav-section">Getting Started</div>
+    <a href="#welcome">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Welcome
+    </a>
+    <a href="#philosophy">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Philosophy
+    </a>
+    <a href="#workflow">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Production Workflow
+    </a>
+
+    <div class="nav-section">SS2026 Collection</div>
+    <a href="#specs">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Product Specifications
+    </a>
+    <a href="#colors">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 010 20"/></svg>
+      Color Standards
+    </a>
+    <a href="#labels">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Labels &amp; Branding
+    </a>
+    <a href="#packaging">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      Packaging
+    </a>
+
+    <div class="nav-section">Quality &amp; Compliance</div>
+    <a href="#quality">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Quality Standards
+    </a>
+    <a href="#sampling">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Sample Approvals
+    </a>
+
+    <div class="nav-section">Resources</div>
+    <a href="#downloads">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Downloads
+    </a>
+    <a href="#faq">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      FAQ
+    </a>
+    <a href="#contact">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+      Contact
+    </a>
+    <a href="#changelog">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Changelog
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    steelstag.in<br/>
+    hello@steelstag.in<br/>
+    Portal v1.0 · SS2026
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Manufacturer Portal</div>
+    <h1>SteelStag</h1>
+    <p>Complete manufacturing specifications, brand guidelines, quality standards, and production documentation for SS2026. All resources required for production are available on this portal.</p>
+    <div class="hero-badges">
+      <div class="hero-badge"><strong>Collection</strong> SS2026</div>
+      <div class="hero-badge"><strong>Status</strong> Sampling Phase</div>
+      <div class="hero-badge"><strong>Styles</strong> Round Neck · V-Neck</div>
+      <div class="hero-badge"><strong>Colors</strong> 5</div>
+      <div class="hero-badge"><strong>MOQ</strong> 200 pcs/color</div>
+    </div>
+  </div>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      SteelStag &rsaquo; Manufacturer Portal &rsaquo; <span>SS2026</span>
+    </div>
+    <div class="topbar-meta">
+      <span class="badge badge-current">&#x25cf; Active</span>
+      <span class="badge badge-version">v1.0</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── Welcome ── -->
+    <section id="welcome">
+      <h2>Welcome</h2>
+      <div class="section-meta">For approved manufacturing partners · Last updated June 2026</div>
+      <p>SteelStag is a premium solid-color t-shirt brand built on one idea: that a perfectly constructed tee in a considered color is all you need. No graphics, no prints — just fabric, form, and color done right.</p>
+      <p>This portal contains everything your production team needs to manufacture SteelStag garments to specification. All documents are versioned. If you have a question not answered here, contact the buyer directly using the details in the Contact section.</p>
+
+      <div class="pillars">
+        <div class="pillar">
+          <h4>Precision over speed</h4>
+          <p>We would rather wait for a correct sample than approve a fast one. Quality checkpoints are non-negotiable.</p>
+        </div>
+        <div class="pillar">
+          <h4>Fabric first</h4>
+          <p>125 GSM combed cotton is the foundation. Mill test reports are required with every sample shipment.</p>
+        </div>
+        <div class="pillar">
+          <h4>Color consistency</h4>
+          <p>Reactive dyeing with Pantone TCX references. Lab dip approval before any cutting begins — no exceptions.</p>
+        </div>
+        <div class="pillar">
+          <h4>No shortcuts on finish</h4>
+          <p>Clean-bound neck with no rib band. Self-fabric tape, flat topstitch. This is the defining detail of the garment.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Philosophy ── -->
+    <section id="philosophy">
+      <h2>Manufacturing Philosophy</h2>
+      <div class="section-meta">What we expect from every production partner</div>
+      <p>SteelStag garments are positioned as premium basics. The construction is intentionally simple — but that simplicity demands execution that is exact. A standard tee factory can make these garments; a good one can make them well.</p>
+      <p>We work with factories that treat the tech pack as a floor, not a ceiling. If you see something in our specification that you believe can be improved, tell us. We welcome that input before sampling, not after bulk is cut.</p>
+      <div class="callout">
+        <strong>Important:</strong> Do not substitute any material, trim, or construction detail without written approval from the buyer. Unauthorized substitutions will result in rejection of the entire shipment.
+      </div>
+    </section>
+
+    <!-- ── Workflow ── -->
+    <section id="workflow">
+      <h2>Production Workflow</h2>
+      <div class="section-meta">From enquiry to delivery — 8 stages</div>
+      <div class="workflow">
+        <div class="workflow-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>RFQ &amp; Costing <span class="step-tag tag-both">Both</span></h4>
+            <p>Factory submits costing sheet broken down by fabric, CMT, trims, and packaging. Buyer reviews and confirms order placement.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Lab Dip Approval <span class="step-tag tag-buyer">Buyer Approval</span></h4>
+            <p>All 5 colors dyed on approved 125 GSM combed cotton. Shade band submitted with lab dips. Written approval required before any fabric is committed to bulk dyeing.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Fit Sample <span class="step-tag tag-buyer">Buyer Approval</span></h4>
+            <p>1 pc per style in Size M, Seaport Teal or Bright White. Shipped to buyer address with measurement worksheet. Buyer provides sign-off within 5 working days of receipt.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Pre-Production Sample <span class="step-tag tag-buyer">Buyer Approval</span></h4>
+            <p>1 pc per style × all 5 colors, incorporating all fit comments. Final approval before cutting begins.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>Bulk Production <span class="step-tag tag-factory">Factory</span></h4>
+            <p>200 pcs per color, 2 styles (100 pcs each). Size split: S 15% / M 35% / L 35% / XL 15%. AQL 2.5 inline inspection required.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <h4>Top of Production <span class="step-tag tag-both">Both</span></h4>
+            <p>2 pcs per style × per color from first bulk roll submitted for buyer retention as bulk standard.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <h4>Final Inspection <span class="step-tag tag-factory">Factory</span></h4>
+            <p>AQL 2.5 final inspection. Measurement audit on 10% of units per size. Shade band check across all cartons.</p>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num">8</div>
+          <div class="step-body">
+            <h4>Shipment &amp; Documentation <span class="step-tag tag-factory">Factory</span></h4>
+            <p>Packed per spec (see Packaging section). Commercial invoice, packing list, and GST/LUT documentation provided. AWB shared on dispatch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Specs ── -->
+    <section id="specs">
+      <h2>Product Specifications</h2>
+      <div class="section-meta">SS2026 · Styles ST-RN-001 &amp; ST-VN-003 · Full TechPack in Downloads</div>
+
+      <h3>Fabric</h3>
+      <table class="spec-table">
+        <tr><td>Composition</td><td>100% Combed Cotton — Single Jersey</td></tr>
+        <tr><td>Yarn Count</td><td>30s Combed Ring Spun</td></tr>
+        <tr><td>GSM</td><td>125 GSM (tolerance ±5 GSM)</td></tr>
+        <tr><td>Dyeing</td><td>Reactive Dyed</td></tr>
+        <tr><td>Finish</td><td>Light enzyme wash — no heavy silicone finish</td></tr>
+        <tr><td>Pre-treatment</td><td>Pre-washed, pre-shrunk</td></tr>
+        <tr><td>Shrinkage</td><td>Max ±3% after wash (no twisting)</td></tr>
+      </table>
+
+      <h3>Construction</h3>
+      <table class="spec-table">
+        <tr><td>Stitch Density</td><td>12–14 SPI (stitches per inch)</td></tr>
+        <tr><td>Thread</td><td>Self-colour polyester thread to match each colorway</td></tr>
+        <tr><td>Seam Type</td><td>Overlock (serger) — all body seams</td></tr>
+        <tr><td>Neck Finish</td><td>Clean-bound / self-fabric tape — no rib band. Single needle topstitch 1/8" from edge.</td></tr>
+        <tr><td>Sleeve Finish</td><td>Twin needle, 1/4" hem, self-colour</td></tr>
+        <tr><td>Bottom Hem</td><td>Single needle, 1" hem, self-colour thread</td></tr>
+      </table>
+
+      <h3>Order Quantities — SS2026</h3>
+      <table class="spec-table">
+        <thead><tr><th>Color</th><th>Round Neck</th><th>V-Neck</th><th>Total / Color</th></tr></thead>
+        <tr><td>Jet Black</td><td>100 pcs</td><td>100 pcs</td><td>200 pcs</td></tr>
+        <tr><td>Bright White</td><td>100 pcs</td><td>100 pcs</td><td>200 pcs</td></tr>
+        <tr><td>Seaport Teal</td><td>100 pcs</td><td>100 pcs</td><td>200 pcs</td></tr>
+        <tr><td>Wild Ginger</td><td>100 pcs</td><td>100 pcs</td><td>200 pcs</td></tr>
+        <tr><td>Brown Sugar</td><td>100 pcs</td><td>100 pcs</td><td>200 pcs</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>500 pcs</strong></td><td><strong>500 pcs</strong></td><td><strong>1,000 pcs</strong></td></tr>
+      </table>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px;">Size split per style: S 15% / M 35% / L 35% / XL 15%</p>
+    </section>
+
+    <!-- ── Colors ── -->
+    <section id="colors">
+      <h2>Color Standards</h2>
+      <div class="section-meta">All colors Pantone TCX · Lab dip approval required before bulk dyeing</div>
+
+      <div class="color-row">
+        <div class="color-chip">
+          <div class="color-swatch" style="background:#1a1a1a"></div>
+          <div>Jet Black</div>
+          <div style="color:#9ca3af">19-0303 TCX</div>
+        </div>
+        <div class="color-chip">
+          <div class="color-swatch" style="background:#EDE8E0;border-color:#ccc"></div>
+          <div>Bright White</div>
+          <div style="color:#9ca3af">11-0601 TCX</div>
+        </div>
+        <div class="color-chip">
+          <div class="color-swatch" style="background:#3A9B8C"></div>
+          <div>Seaport Teal</div>
+          <div style="color:#9ca3af">17-5126 TCX</div>
+        </div>
+        <div class="color-chip">
+          <div class="color-swatch" style="background:#C97B3A"></div>
+          <div>Wild Ginger</div>
+          <div style="color:#9ca3af">15-1157 TCX</div>
+        </div>
+        <div class="color-chip">
+          <div class="color-swatch" style="background:#8B4A2B"></div>
+          <div>Brown Sugar</div>
+          <div style="color:#9ca3af">18-1048 TCX</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Shade band requirement:</strong> Each dye lot must be accompanied by a shade band showing the lightest and darkest acceptable piece. Shade variation within the same dye lot must not exceed Grade 4 on the Grey Scale (ISO 105-A02). Pieces outside the approved shade band will be rejected.
+      </div>
+    </section>
+
+    <!-- ── Labels ── -->
+    <section id="labels">
+      <h2>Labels &amp; Branding</h2>
+      <div class="section-meta">All label artwork at 300 DPI · Do not substitute fonts or colors</div>
+
+      <table class="spec-table">
+        <thead><tr><th>Label</th><th>Type</th><th>Placement</th></tr></thead>
+        <tr><td>Neck Label</td><td>Woven / printed, size-specific (S/M/L/XL)</td><td>Centre back, 1" below collar seam</td></tr>
+        <tr><td>Wash Care Label</td><td>Woven / printed</td><td>Left side seam, 3" from bottom hem</td></tr>
+        <tr><td>Hang Tag</td><td>Printed, double-sided, attached with cord</td><td>Left side seam</td></tr>
+        <tr><td>Size Sticker</td><td>Printed sticker</td><td>Outside of polybag, bottom right</td></tr>
+      </table>
+
+      <p style="margin-top:20px;font-size:13px;color:var(--muted);">All label print files are included in the Labels download below. Use files as provided — do not re-typeset or adjust colors.</p>
+    </section>
+
+    <!-- ── Packaging ── -->
+    <section id="packaging">
+      <h2>Packaging</h2>
+      <div class="section-meta">Primary retail packaging specification</div>
+
+      <table class="spec-table">
+        <tr><td>Type</td><td>Kraft paper standup pouch with zipper seal</td></tr>
+        <tr><td>Size</td><td>32cm × 40cm</td></tr>
+        <tr><td>Material</td><td>Kraft paper laminated</td></tr>
+        <tr><td>Design</td><td>Two-tone: top 65% natural kraft (#C8A96E), bottom 35% matte black (#1A1A1A)</td></tr>
+        <tr><td>Closure</td><td>Zipper reseal at top</td></tr>
+        <tr><td>Finish</td><td>Matte throughout — no gloss lamination</td></tr>
+        <tr><td>Folding</td><td>Standard retail fold — tee folded to approx 28cm × 20cm</td></tr>
+        <tr><td>Insert</td><td>Size sticker affixed on outside, bottom right corner</td></tr>
+      </table>
+
+      <div class="callout" style="margin-top:20px;">
+        <strong>Note:</strong> Packaging reference mockup available in the Downloads section. If sourcing the kraft pouch locally, confirm spec with buyer before ordering.
+      </div>
+    </section>
+
+    <!-- ── Quality ── -->
+    <section id="quality">
+      <h2>Quality Standards</h2>
+      <div class="section-meta">Minimum acceptable quality for SS2026 production</div>
+
+      <table class="spec-table">
+        <tr><td>Shrinkage</td><td>Max ±3% (length &amp; width) after 3 washes at 30°C</td></tr>
+        <tr><td>Color Fastness</td><td>Min Grade 4 — washing, rubbing, perspiration</td></tr>
+        <tr><td>Pilling</td><td>Min Grade 3–4 after 1000 cycles</td></tr>
+        <tr><td>GSM Tolerance</td><td>±5 GSM from approved standard</td></tr>
+        <tr><td>AQL</td><td>2.5 — inline and final inspection</td></tr>
+        <tr><td>Shade Consistency</td><td>Grade 4 Grey Scale (ISO 105-A02) within dye lot</td></tr>
+        <tr><td>Measurement Tolerance</td><td>±0.5" on all points of measure</td></tr>
+        <tr><td>Certification</td><td>OCS / BCI certificate preferred — mill test report required with sample</td></tr>
+      </table>
+    </section>
+
+    <!-- ── Sampling ── -->
+    <section id="sampling">
+      <h2>Sample Approvals</h2>
+      <div class="section-meta">All samples shipped to buyer address for sign-off</div>
+
+      <table class="spec-table">
+        <thead><tr><th>Stage</th><th>Requirement</th><th>Approval</th></tr></thead>
+        <tr><td>Lab Dip</td><td>All 5 colors on approved 125 GSM combed cotton</td><td>Written — required before bulk</td></tr>
+        <tr><td>Fit Sample</td><td>1 pc per style, Size M (Seaport Teal or Bright White)</td><td>Measurement + visual sign-off</td></tr>
+        <tr><td>Pre-Production</td><td>1 pc per style × all 5 colors</td><td>Final approval before cutting</td></tr>
+        <tr><td>Top of Production</td><td>2 pcs per style × per color from first bulk roll</td><td>Retained as bulk standard</td></tr>
+      </table>
+
+      <div class="callout" style="margin-top:20px;">
+        <strong>Sample Shipment:</strong> All approval samples to be shipped via DHL or FedEx express to buyer address in Hungary (see Contact). Share AWB tracking number on dispatch. Buyer will provide written sign-off within 5 working days of receipt.
+      </div>
+    </section>
+
+    <!-- ── Downloads ── -->
+    <section id="downloads">
+      <h2>Downloads</h2>
+      <div class="section-meta">All production documents · Versioned · Last updated June 2026</div>
+
+      <div class="dl-library">
+
+        <div class="dl-section-header">Technical Documents</div>
+
+        <div class="dl-row">
+          <div class="dl-row-icon">
+            <svg width="16" height="16" fill="none" stroke="#374151" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="dl-row-body">
+            <h4>Technical Pack — SS2026</h4>
+            <p>Complete garment specifications: fabric, construction, measurements, stitch spec, label placement</p>
+          </div>
+          <div class="dl-row-meta">
+            <span class="badge badge-version">v1.0</span>
+            <span class="dl-row-size">DOCX</span>
+            <a class="dl-btn dl-btn-ghost" title="PDF version coming soon">Download</a>
+          </div>
+        </div>
+
+        <div class="dl-section-header">Labels &amp; Branding</div>
+
+        <div class="dl-row">
+          <div class="dl-row-icon">
+            <svg width="16" height="16" fill="none" stroke="#374151" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          </div>
+          <div class="dl-row-body">
+            <h4>All Labels — Print Ready PDF</h4>
+            <p>Neck labels (S/M/L/XL), wash care label, hang tags (front &amp; back), size stickers — all at 300 DPI with crop marks</p>
+          </div>
+          <div class="dl-row-meta">
+            <span class="badge badge-version">v1.0</span>
+            <span class="dl-row-size">PDF</span>
+            <a class="dl-btn" href="downloads/SteelStag-Labels-SS2026-v1.0.pdf" download>Download</a>
+          </div>
+        </div>
+
+        <div class="dl-row">
+          <div class="dl-row-icon">
+            <svg width="16" height="16" fill="none" stroke="#374151" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 010 20"/></svg>
+          </div>
+          <div class="dl-row-body">
+            <h4>Logo Package</h4>
+            <p>SteelStag logo — transparent PNG and dark print version</p>
+          </div>
+          <div class="dl-row-meta">
+            <span class="badge badge-version">v1.0</span>
+            <span class="dl-row-size">PNG</span>
+            <a class="dl-btn dl-btn-ghost" title="ZIP coming soon">Download</a>
+          </div>
+        </div>
+
+        <div class="dl-section-header">Packaging</div>
+
+        <div class="dl-row">
+          <div class="dl-row-icon">
+            <svg width="16" height="16" fill="none" stroke="#374151" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          </div>
+          <div class="dl-row-body">
+            <h4>Packaging Mockup — Kraft Pouch</h4>
+            <p>Visual reference for two-tone kraft standup pouch specification</p>
+          </div>
+          <div class="dl-row-meta">
+            <span class="badge badge-version">v1.0</span>
+            <span class="dl-row-size">PNG</span>
+            <a class="dl-btn" href="assets/Packaging-Pouch-Mockup.png" download>Download</a>
+          </div>
+        </div>
+
+        <div class="dl-section-header">Color Reference</div>
+
+        <div class="dl-row">
+          <div class="dl-row-icon">
+            <svg width="16" height="16" fill="none" stroke="#374151" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="dl-row-body">
+            <h4>Color Standards — SS2026</h4>
+            <p>Pantone TCX references, hex values, and fabric color reference images for all 5 colorways</p>
+          </div>
+          <div class="dl-row-meta">
+            <span class="badge badge-version">v1.0</span>
+            <span class="dl-row-size">PNG</span>
+            <a class="dl-btn dl-btn-ghost" title="PDF version coming soon">Download</a>
+          </div>
+        </div>
+
+      </div>
+
+      <p style="margin-top:14px;font-size:12px;color:var(--muted);">
+        Documents marked as unavailable are being prepared. Contact <a href="mailto:anjanimishrait@gmail.com" style="color:var(--ink)">anjanimishrait@gmail.com</a> to request any document directly.
+      </p>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section id="faq">
+      <h2>FAQ</h2>
+      <div class="section-meta">Common questions from manufacturing partners</div>
+
+      <div class="faq-item">
+        <div class="faq-q">What is the minimum order quantity per color?</div>
+        <div class="faq-a">200 pcs per color (100 pcs per style × 2 styles). This is set at 200 to ensure dye lot consistency — reactive dyeing below this quantity risks shade variation between pieces.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can we substitute the rib neck finish for a clean-bound finish?</div>
+        <div class="faq-a">No. The clean-bound self-fabric neck with no rib band is a defining spec. All 3 neck styles use this construction. Reference the TechPack for exact topstitch placement.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Where do we ship samples?</div>
+        <div class="faq-a">All samples ship to the buyer in Hungary via DHL or FedEx express. Shipping address and contact in the Contact section. Share the AWB number by email on the day of dispatch.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can we source the kraft pouch locally?</div>
+        <div class="faq-a">Yes, but the spec must match exactly: 32×40cm, matte kraft laminate, zipper seal, two-tone print. Send a sample pouch for buyer approval before ordering full quantity.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What certifications are required?</div>
+        <div class="faq-a">OCS or BCI certificate for cotton is preferred but not mandatory for SS2026. A mill test report (GSM, shrinkage, color fastness) is required with every sample shipment.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How long does buyer approval take after receiving samples?</div>
+        <div class="faq-a">5 working days from confirmed receipt. If approval is delayed beyond this, the buyer will communicate a revised date. Do not proceed to the next stage without written approval.</div>
+      </div>
+    </section>
+
+    <!-- ── Contact ── -->
+    <section id="contact">
+      <h2>Contact</h2>
+      <div class="section-meta">Reach out for approvals, queries, and sample shipments</div>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="role">Buyer · Brand Owner</div>
+          <div class="name">Anjan Mishra</div>
+          <a href="mailto:anjanimishrait@gmail.com">anjanimishrait@gmail.com</a>
+          <a href="mailto:hello@steelstag.in">hello@steelstag.in</a>
+          <div class="detail">+36 70 198 3287</div>
+        </div>
+        <div class="contact-card">
+          <div class="role">Sample Delivery Address</div>
+          <div class="name">SteelStag Approvals</div>
+          <div class="detail">1139 Budapest</div>
+          <div class="detail">Rozsnyay utca 14–16</div>
+          <div class="detail">B lph, 1 em, 104 ajto</div>
+          <div class="detail">Hungary</div>
+        </div>
+        <div class="contact-card">
+          <div class="role">Brand Website</div>
+          <div class="name">steelstag.in</div>
+          <a href="https://steelstag.in" target="_blank" rel="noopener">steelstag.in</a>
+          <div class="detail" style="margin-top:8px;font-size:11px;color:var(--muted)">For courier shipments, always email the AWB to anjanimishrait@gmail.com on dispatch day.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Changelog ── -->
+    <section id="changelog">
+      <h2>Changelog</h2>
+      <div class="section-meta">Portal and document revision history</div>
+
+      <div class="changelog">
+        <div class="changelog-entry">
+          <span class="changelog-ver">v1.0</span>
+          <span class="changelog-date">June 2026</span>
+          <span class="changelog-desc">Initial portal launch. TechPack, labels, color standards, packaging spec for SS2026.</span>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  // Highlight active sidebar link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.sidebar-nav a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar-nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
