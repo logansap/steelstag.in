@@ -224,7 +224,7 @@ def make_pouch():
     f_info_val   = get_font(19, bold=True)
     infos = [
         ("FABRIC", "100% Combed Cotton"),
-        ("GSM",    "125"),
+        ("GSM",    "160"),
         ("ORIGIN", "Made in India"),
     ]
     col_w = PW // 3
