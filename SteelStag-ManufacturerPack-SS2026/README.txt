@@ -40,7 +40,7 @@ PACKAGE CONTENTS
 ================================================================
 SAMPLING INSTRUCTIONS (ref. TechPack Section 9)
 
-1. Lab Dip       — All 5 colors on approved 160 GSM combed cotton fabric
+1. Lab Dip       — All 5 colors on approved 180 GSM combed cotton fabric
 2. Fit Sample    — 1 pc per style in size M (Seaport Teal or Bright White)
 3. Pre-Production— 1 pc per style × all 5 colors
 4. TOP           — 2 pcs per style × per color from first bulk roll
@@ -51,7 +51,7 @@ Do not proceed to next stage without written approval from SteelStag.
 KEY SPECIFICATIONS (ref. TechPack Section 2–4)
 
 Fabric:      100% Combed Cotton, Single Jersey, 30s Ring Spun
-GSM:         160 GSM (tolerance ±5 GSM)
+GSM:         180 GSM (tolerance ±5 GSM)
 Dyeing:      Reactive dyed
 Finish:      Light enzyme wash — NO heavy silicone
 Neck:        Clean-bound self-fabric tape — NO rib band

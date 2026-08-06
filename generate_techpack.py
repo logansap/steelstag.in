@@ -169,7 +169,7 @@ hr()
 heading('2.  FABRIC SPECIFICATION')
 kv('Fabric',          '100% Combed Cotton — Single Jersey')
 kv('Yarn Count',      '30s Combed Ring Spun')
-kv('GSM',             '160 GSM  (tolerance ±5 GSM)')
+kv('GSM',             '180 GSM  (tolerance ±5 GSM)')
 kv('Construction',    'Single Jersey')
 kv('Dyeing',          'Reactive Dyed')
 kv('Finish',          'Light enzyme wash (no heavy silicone finish)')
@@ -355,7 +355,7 @@ heading('9.  SAMPLING & APPROVAL PROCESS')
 make_table(
     ['Stage', 'Requirement', 'Approval'],
     [
-        ['Lab Dip',          'All 5 colors — reactive dyed on approved 160 GSM combed cotton', 'Written approval required before bulk'],
+        ['Lab Dip',          'All 5 colors — reactive dyed on approved 180 GSM combed cotton', 'Written approval required before bulk'],
         ['Fit Sample',       '1 pc per style in size M (Seaport Teal or Bright White)',        'Measurement + visual sign-off'],
         ['Pre-Production',   '1 pc per style × all 5 colors',                                  'Final approval before cutting'],
         ['Top of Production','2 pcs per style × per color from first bulk roll',     'Retained as bulk standard'],
