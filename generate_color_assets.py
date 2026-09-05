@@ -143,15 +143,23 @@ def make_swatch(color):
 
 
 # ── 2. Packaging pouch mockup ─────────────────────────────────────────────────
+# Real pouch is 320mm x 400mm (see TechPack Sec. 8). The design below was
+# originally drawn on a small 900x1200 concept canvas — far below 300 DPI at
+# the real pouch size (~71 DPI). PRINT_SCALE blows it up to a genuinely
+# print-ready resolution (~320-340 DPI at true size) while keeping every
+# proportion in the original design identical.
+PRINT_SCALE = 4.5
+
 def make_pouch():
-    W, H = 900, 1200
+    W, H = round(900 * PRINT_SCALE), round(1200 * PRINT_SCALE)
     img = Image.new("RGB", (W, H), (220, 215, 208))  # light grey bg
     draw = ImageDraw.Draw(img)
 
     # Pouch outline (rounded rect)
-    PAD = 55
+    PAD = round(55 * PRINT_SCALE)
     PW, PH = W - 2*PAD, H - 2*PAD
-    R = 32  # corner radius
+    R = round(32 * PRINT_SCALE)  # corner radius
+    S = lambda v: round(v * PRINT_SCALE)  # scale any other literal from the original 900x1200 design
 
     def draw_rounded_rect(d, x0, y0, x1, y1, r, fill):
         d.rectangle([x0+r, y0, x1-r, y1], fill=fill)
@@ -172,27 +180,30 @@ def make_pouch():
     draw_rounded_rect(draw, PAD, BAND_Y - R, PAD+PW, PAD+PH, R, DARK_BAND)
 
     # Top zip area — slightly darker kraft strip
-    ZIP_H = 80
+    ZIP_H = S(80)
     draw.rectangle([PAD, PAD, PAD+PW, PAD+ZIP_H], fill=(175, 148, 110))
 
     # Top banner (small dark rectangle like Finn)
-    BANNER_W = 320
+    BANNER_W = S(320)
     BX = PAD + (PW - BANNER_W)//2
-    BY = PAD + 10
-    draw.rectangle([BX, BY, BX+BANNER_W, BY+52], fill=DARK_BAND)
-    f_url = get_brand_font(17)
-    draw.text((BX + BANNER_W//2, BY+26), "steelstag.in", font=f_url, fill=(180,170,155), anchor="mm")
+    BY = PAD + S(10)
+    draw.rectangle([BX, BY, BX+BANNER_W, BY+S(52)], fill=DARK_BAND)
+    f_url = get_brand_font(S(17))
+    draw.text((BX + BANNER_W//2, BY+S(26)), "steelstag.in", font=f_url, fill=(180,170,155), anchor="mm")
 
     # Zip perforations
-    for xi in range(PAD + 20, PAD + PW - 10, 18):
-        draw.ellipse([xi, PAD + ZIP_H - 8, xi+4, PAD + ZIP_H - 4], fill=(155, 128, 95))
+    for xi in range(PAD + S(20), PAD + PW - S(10), S(18)):
+        draw.ellipse([xi, PAD + ZIP_H - S(8), xi+S(4), PAD + ZIP_H - S(4)], fill=(155, 128, 95))
 
     # Load stag logo and paste onto kraft area
     logo_path = str(Path(__file__).parent / 'SteelStag-ManufacturerPack-SS2026' / '03-Logo' / 'SteelStag-Logo-Transparent.png')
     if os.path.exists(logo_path):
         logo = Image.open(logo_path).convert("RGBA")
         # Darken logo to match kraft contrast (multiply to charcoal)
-        logo_size = 340
+        # Cap at the source logo's native width — upscaling past it would soften
+        # a design element that has no vector master, undermining the whole
+        # point of a print-ready file.
+        logo_size = min(S(340), logo.width)
         logo = logo.resize((logo_size, int(logo_size * logo.height / logo.width)), Image.LANCZOS)
         # Tint logo charcoal
         r2,g2,b2,a2 = logo.split()
@@ -204,24 +215,24 @@ def make_pouch():
         ])
         logo_x = PAD + (PW - dark_logo.width)//2
         kraft_mid = PAD + int(PH * 0.45) // 2
-        logo_y = PAD + ZIP_H + 20
+        logo_y = PAD + ZIP_H + S(20)
         img.paste(dark_logo, (logo_x, logo_y), dark_logo)
-        text_y = logo_y + dark_logo.height + 16
+        text_y = logo_y + dark_logo.height + S(16)
     else:
-        text_y = PAD + ZIP_H + 60
+        text_y = PAD + ZIP_H + S(60)
 
     # Tagline — sits just below the brand name
-    f_tag = get_font(20)
-    draw.text((W//2, text_y + 20), "Color. Nothing else.", font=f_tag, fill=(80,70,60), anchor="mm")
+    f_tag = get_font(S(20))
+    draw.text((W//2, text_y + S(20)), "Color. Nothing else.", font=f_tag, fill=(80,70,60), anchor="mm")
 
     # Subtle horizontal rule below tagline
-    rule_y = text_y + 46
-    draw.rectangle([W//2 - 90, rule_y, W//2 + 90, rule_y + 1], fill=(140,125,105))
+    rule_y = text_y + S(46)
+    draw.rectangle([W//2 - S(90), rule_y, W//2 + S(90), rule_y + S(1)], fill=(140,125,105))
 
     # On dark band — fabric info
-    INFO_Y = BAND_Y + 55
-    f_info_label = get_font(14)
-    f_info_val   = get_font(19, bold=True)
+    INFO_Y = BAND_Y + S(55)
+    f_info_label = get_font(S(14))
+    f_info_val   = get_font(S(19), bold=True)
     infos = [
         ("FABRIC", "100% Combed Cotton"),
         ("GSM",    "180"),
@@ -231,9 +242,9 @@ def make_pouch():
     for i, (lbl, val) in enumerate(infos):
         cx = PAD + col_w * i + col_w//2
         draw.text((cx, INFO_Y), lbl, font=f_info_label, fill=(120,115,105), anchor="mm")
-        draw.text((cx, INFO_Y + 28), val, font=f_info_val, fill=(220,215,205), anchor="mm")
+        draw.text((cx, INFO_Y + S(28)), val, font=f_info_val, fill=(220,215,205), anchor="mm")
         if i < 2:
-            draw.rectangle([PAD + col_w*(i+1) - 1, INFO_Y - 14, PAD + col_w*(i+1), INFO_Y + 54],
+            draw.rectangle([PAD + col_w*(i+1) - 1, INFO_Y - S(14), PAD + col_w*(i+1), INFO_Y + S(54)],
                            fill=(55, 58, 68))
 
     # Bottom of dark band — intentionally left clean
@@ -241,13 +252,13 @@ def make_pouch():
     # Pouch border / shadow suggestion
     draw_rounded_rect(draw, PAD-1, PAD-1, PAD+PW+1, PAD+PH+1, R+1, None)  # skip — just outline
     # Thin outline
-    for offset in range(1, 3):
+    for offset in range(1, S(3)):
         draw.rectangle([PAD+R, PAD-offset, PAD+PW-R, PAD], fill=(160,150,135))
         draw.rectangle([PAD+R, PAD+PH, PAD+PW-R, PAD+PH+offset], fill=(100,95,88))
 
     out_path = os.path.join(OUT, "Packaging-Pouch-Mockup.png")
-    img.save(out_path, dpi=(300,300))
-    print(f"  Saved: Packaging-Pouch-Mockup.png")
+    img.save(out_path, dpi=(321,321))
+    print(f"  Saved: Packaging-Pouch-Mockup.png  ({W}x{H}px, print-ready at true 320x400mm size)")
 
 
 # ── Run ───────────────────────────────────────────────────────────────────────
