@@ -143,23 +143,31 @@ def make_swatch(color):
 
 
 # ── 2. Packaging pouch mockup ─────────────────────────────────────────────────
-# Real pouch is 320mm x 400mm (see TechPack Sec. 8). The design below was
-# originally drawn on a small 900x1200 concept canvas — far below 300 DPI at
-# the real pouch size (~71 DPI). PRINT_SCALE blows it up to a genuinely
-# print-ready resolution (~320-340 DPI at true size) while keeping every
-# proportion in the original design identical.
-PRINT_SCALE = 4.5
+# Real pouch is 240mm x 340mm — a standard 1kg-tier kraft stand-up pouch
+# size (matches the Finn Design reference this packaging is based on),
+# swapped in from an oversized custom 320x400mm spec. Canvas size below is
+# derived straight from these real dimensions at a print-safe DPI, so the
+# image always matches the spec'd pouch shape exactly.
+REAL_W_MM, REAL_H_MM = 240, 340
+POUCH_DPI = 320  # comfortably above the ~300 DPI print minimum
 
 def make_pouch():
-    W, H = round(900 * PRINT_SCALE), round(1200 * PRINT_SCALE)
+    px_per_mm = POUCH_DPI / 25.4
+    W = round(REAL_W_MM * px_per_mm)
+    H = round(REAL_H_MM * px_per_mm)
     img = Image.new("RGB", (W, H), (220, 215, 208))  # light grey bg
     draw = ImageDraw.Draw(img)
 
+    # Original design was authored on a 900(w) x 1200(h) canvas (ratio 1.333);
+    # the corrected canvas above is ratio 1.25. The two axis scales differ by
+    # only ~7%, so a single average scale for every literal below reads
+    # cleanly without visibly distorting any element.
+    S = lambda v: round(v * (W/900 + H/1200) / 2)
+
     # Pouch outline (rounded rect)
-    PAD = round(55 * PRINT_SCALE)
+    PAD = S(55)
     PW, PH = W - 2*PAD, H - 2*PAD
-    R = round(32 * PRINT_SCALE)  # corner radius
-    S = lambda v: round(v * PRINT_SCALE)  # scale any other literal from the original 900x1200 design
+    R = S(32)  # corner radius
 
     def draw_rounded_rect(d, x0, y0, x1, y1, r, fill):
         d.rectangle([x0+r, y0, x1-r, y1], fill=fill)
@@ -258,7 +266,7 @@ def make_pouch():
 
     out_path = os.path.join(OUT, "Packaging-Pouch-Mockup.png")
     img.save(out_path, dpi=(321,321))
-    print(f"  Saved: Packaging-Pouch-Mockup.png  ({W}x{H}px, print-ready at true 320x400mm size)")
+    print(f"  Saved: Packaging-Pouch-Mockup.png  ({W}x{H}px, print-ready at true {REAL_W_MM}x{REAL_H_MM}mm size)")
 
 
 # ── Run ───────────────────────────────────────────────────────────────────────

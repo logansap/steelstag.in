@@ -327,7 +327,7 @@ heading('8.  PACKAGING')
 
 subheading('Primary Packaging — Kraft Paper Standup Pouch')
 kv('Type',            'Kraft paper standup pouch with zipper seal')
-kv('Size',            '32cm × 40cm (fits folded tee — standard retail fold)')
+kv('Size',            '24cm × 34cm (fits folded tee — standard retail fold)')
 kv('Material',        'Kraft paper laminated, food-grade inner layer not required')
 kv('Design',          'Two-tone: top 45% natural kraft (#C8A96E), bottom 55% matte black (#1A1A1A)')
 kv('Logo Print',      '"STEELSTAG" centered on kraft section — large, black ink, serif or brand font')
