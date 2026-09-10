@@ -340,10 +340,20 @@ async def render():
         server.shutdown()
 
         # Combine into PDF
+        # PX*DPR = 3.7795 px/mm @96dpi * 4 = exactly 384 px/inch (25.4mm).
+        # None of these screenshots carry PNG DPI metadata, so img2pdf falls
+        # back to assuming 96 DPI per image when not told otherwise — for
+        # images it fails to size any other way, this silently shrinks the
+        # printed size to 4x too large / DPI to 4x too low (was the cause of
+        # blurry Wash Care Label / Hang Tag pages while Neck Label / Size
+        # Sticker happened to come out looking fine). Force the true DPI
+        # explicitly so every page is sized correctly.
+        true_dpi = PX * DPR * 25.4       # px/mm * mm/inch = px/inch
         pdf_path = str(OUT / 'SteelStag-Labels-PrintReady.pdf')
+        layout = img2pdf.get_fixed_dpi_layout_fun((true_dpi, true_dpi))
         with open(pdf_path, 'wb') as f:
-            f.write(img2pdf.convert(png_files))
-        print(f"PDF saved -> {pdf_path}")
+            f.write(img2pdf.convert(png_files, layout_fun=layout))
+        print(f"PDF saved -> {pdf_path} (locked at {true_dpi:.1f} DPI)")
 
 asyncio.run(render())
 
