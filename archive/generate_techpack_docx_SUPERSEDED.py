@@ -1,3 +1,29 @@
+"""
+SUPERSEDED - retained for reference only. Do not run; do not edit to "fix".
+
+This generated a DOCX Tech Pack. It is superseded by generate_techpack_pdf.py,
+which prints the manufacturer portal (the single source of truth) to PDF.
+
+Two problems made it dangerous to keep in the build path:
+
+ 1. It carried its own copies of global specifications that had drifted out of
+    date - tolerance +/-0.5" (Tech Pack says +/-1/4"), pouch two-tone split
+    45/55 (Tech Pack says 65/35) with a "dark top band", size sticker on a
+    "polybag", hang tag attached "with thread" (Tech Pack says cord). Anyone
+    regenerating from it would have shipped those over the current spec.
+
+ 2. It emitted all three developed styles as if all three were being produced,
+    including ST-DS-002 Deep Scoop, which is not part of the SS2026 order.
+
+The style definitions it contained - including the full ST-DS-002 Deep Scoop
+neck measurements and construction - have been preserved in steelstag_styles.py,
+which separates the reusable style library from the styles a given collection
+actually produces. Deep Scoop is retained there for a future collection.
+
+Nothing below is authoritative. Read steelstag_styles.py and the manufacturer
+portal instead.
+"""
+
 from docx import Document
 from docx.shared import Pt, RGBColor, Inches, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH

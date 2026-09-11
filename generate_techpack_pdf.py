@@ -3,8 +3,7 @@ Generate TechPack PDF from the manufacturer portal HTML.
 The portal is the single source of truth — run this script after
 any content changes to regenerate the PDF.
 
-Output: manufacturer/downloads/SteelStag-TechPack-SS2026-v1.0.pdf
-        SteelStag-ManufacturerPack-SS2026/01-TechPack/SteelStag-TechPack-SS2026.pdf
+Output: SteelStag-ManufacturerPack-SS2026/01-TechPack/SteelStag-TechPack-SS2026-v1.3.pdf
 """
 import asyncio, sys, subprocess, threading
 from pathlib import Path
@@ -12,9 +11,10 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 BASE = Path(__file__).parent
 HTML = BASE / 'manufacturer' / 'index.html'
+# Single canonical output. The package ZIP is built from the pack folder by
+# build_package.py, so there is no second copy to drift out of sync.
 OUTS = [
-    BASE / 'manufacturer' / 'downloads' / 'SteelStag-TechPack-SS2026-v1.0.pdf',
-    BASE / 'SteelStag-ManufacturerPack-SS2026' / '01-TechPack' / 'SteelStag-TechPack-SS2026.pdf',
+    BASE / 'SteelStag-ManufacturerPack-SS2026' / '01-TechPack' / 'SteelStag-TechPack-SS2026-v1.3.pdf',
 ]
 
 PORT = 8932

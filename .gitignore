@@ -11,12 +11,13 @@ __pycache__/
 # Backups
 *.bak
 
-# Archives (large, generated)
+# Archives (large, generated) - the released manufacturer package is an
+# exception: it is a deliverable and must be versioned.
 *.zip
+!manufacturer/downloads/SteelStag-CompleteManufacturerPackage-SS2026-*.zip
 
-# Generated label PNGs in ManufacturerPack (copies live in manufacturer/assets/)
-SteelStag-ManufacturerPack-SS2026/02-Labels/**/*.png
-SteelStag-ManufacturerPack-SS2026/04-ColorReference/*.png
+# Released label and colour-reference artwork IS tracked. It ships to the
+# factory, so it needs history and must be diffable across revisions.
 
 # Temp/review folders
 C:/Temp/

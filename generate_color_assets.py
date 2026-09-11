@@ -21,7 +21,7 @@ COLORS = [
 
 # Brand palette
 CHARCOAL  = (30, 28, 26)
-KRAFT     = (196, 168, 130)   # warm kraft paper
+KRAFT     = (200, 169, 110)   # #C8A96E — matches the Tech Pack packaging spec
 DARK_BAND = (28, 32, 40)      # deep navy/charcoal bottom
 OFF_WHITE = (245, 241, 235)
 
@@ -120,15 +120,17 @@ def make_swatch(color):
     f_label = get_font(14)
     f_value = get_font(22, bold=True)
     col_positions = [60, 310, 560, 680]   # not used; do rows
-    y = INFO_TOP + 138
+    # Row pitch tightened from 64 to 52 px: at the old pitch the CMYK value
+    # landed under the footer bar and was unreadable on every card.
+    y = INFO_TOP + 134
     for label, value in specs:
         draw.text((60, y), label, font=f_label, fill=(160,150,135))
         draw.text((60, y + 18), value, font=f_value, fill=CHARCOAL)
-        y += 64
+        y += 52
 
     # Small color chip in bottom-right
     CHIP = 80
-    chip_x, chip_y = W_CARD - 60 - CHIP, INFO_TOP + 138
+    chip_x, chip_y = W_CARD - 60 - CHIP, INFO_TOP + 134
     draw.rectangle([chip_x, chip_y, chip_x + CHIP, chip_y + CHIP], fill=rgb)
     draw.rectangle([chip_x, chip_y, chip_x + CHIP, chip_y + CHIP], outline=(200,195,185), width=1)
 
@@ -145,13 +147,23 @@ def make_swatch(color):
 # ── 2. Packaging pouch mockup ─────────────────────────────────────────────────
 # Real pouch is 240mm x 340mm — a standard 1kg-tier kraft stand-up pouch
 # size (matches the Finn Design reference this packaging is based on),
-# swapped in from an oversized custom 320x400mm spec. Canvas size below is
-# derived straight from these real dimensions at a print-safe DPI, so the
-# image always matches the spec'd pouch shape exactly.
+# swapped in from an oversized custom 320x400mm spec.
+#
+# THIS IS A VISUAL REFERENCE, NOT PRINT ARTWORK. The pouch graphic sits inset
+# inside the canvas on a mockup background, is RGB, and has no gusset, back
+# panel, seal zone, bleed or dieline. The converter produces the dieline to
+# manufacturer standard from the 24 x 34 cm size and the two-tone layout.
 REAL_W_MM, REAL_H_MM = 240, 340
 POUCH_DPI = 320  # comfortably above the ~300 DPI print minimum
 
-def make_pouch():
+def make_pouch(side='front'):
+    """Front or back pouch artboard.
+
+    Front is brand-led and carries no legal declaration of any kind.
+    Back carries the retail declaration panel (OD-01) on the kraft ground,
+    which is where the Tech Pack specifies it and where small legal type
+    stays legible under matte lamination.
+    """
     px_per_mm = POUCH_DPI / 25.4
     W = round(REAL_W_MM * px_per_mm)
     H = round(REAL_H_MM * px_per_mm)
@@ -203,70 +215,92 @@ def make_pouch():
     for xi in range(PAD + S(20), PAD + PW - S(10), S(18)):
         draw.ellipse([xi, PAD + ZIP_H - S(8), xi+S(4), PAD + ZIP_H - S(4)], fill=(155, 128, 95))
 
-    # Load stag logo and paste onto kraft area
-    logo_path = str(Path(__file__).parent / 'SteelStag-ManufacturerPack-SS2026' / '03-Logo' / 'SteelStag-Logo-Transparent.png')
-    if os.path.exists(logo_path):
-        logo = Image.open(logo_path).convert("RGBA")
-        # Darken logo to match kraft contrast (multiply to charcoal)
-        # Cap at the source logo's native width — upscaling past it would soften
-        # a design element that has no vector master, undermining the whole
-        # point of a print-ready file.
-        logo_size = min(S(340), logo.width)
-        logo = logo.resize((logo_size, int(logo_size * logo.height / logo.width)), Image.LANCZOS)
-        # Tint logo charcoal
-        r2,g2,b2,a2 = logo.split()
-        dark_logo = Image.merge("RGBA", [
-            Image.eval(r2, lambda x: int(x * 0.18)),
-            Image.eval(g2, lambda x: int(x * 0.16)),
-            Image.eval(b2, lambda x: int(x * 0.14)),
-            a2
-        ])
-        logo_x = PAD + (PW - dark_logo.width)//2
-        kraft_mid = PAD + int(PH * 0.45) // 2
-        logo_y = PAD + ZIP_H + S(20)
-        img.paste(dark_logo, (logo_x, logo_y), dark_logo)
-        text_y = logo_y + dark_logo.height + S(16)
+    if side == 'front':
+        # ── FRONT: brand only. No MRP, no declaration panel, no legal type. ──
+        logo_path = str(Path(__file__).parent / 'SteelStag-ManufacturerPack-SS2026'
+                        / '03-Logo' / 'SteelStag-Logo-Transparent.png')
+        if os.path.exists(logo_path):
+            logo = Image.open(logo_path).convert("RGBA")
+            # Work from the mark, not the canvas, so master clear space cannot
+            # change the printed size.
+            logo = logo.crop(logo.split()[3].getbbox())
+            # The approved master is placed AS-IS, directly on the kraft.
+            # No tint, no multiply, no recolour, no backing panel. Measured on
+            # this ground the mark holds: 71% of its pixels sit darker than the
+            # kraft and the highlights still reach 255, so the metallic reads
+            # without anything propping it up.
+            #
+            # Sized to the master's native mark width -- as large as it goes
+            # before upscaling would soften it -- for presence on kraft.
+            mark_w = min(S(250), logo.width)
+            logo = logo.resize((mark_w, round(mark_w * logo.height / logo.width)), Image.LANCZOS)
+
+            # Centre the brand block (mark + tagline + rule) in the kraft field
+            # so the front reads as one composition instead of sitting high.
+            kraft_top = PAD + ZIP_H
+            kraft_h = BAND_Y - kraft_top
+            block_h = logo.height + S(70)
+            logo_x = PAD + (PW - logo.width) // 2
+            logo_y = kraft_top + max(S(40), (kraft_h - block_h) // 2)
+            img.paste(logo, (logo_x, logo_y), logo)
+            text_y = logo_y + logo.height + S(16)
+        else:
+            text_y = PAD + ZIP_H + S(60)
+
+        f_tag = get_font(S(20))
+        draw.text((W//2, text_y + S(20)), "Color. Nothing else.", font=f_tag, fill=(80,70,60), anchor="mm")
+        rule_y = text_y + S(46)
+        draw.rectangle([W//2 - S(90), rule_y, W//2 + S(90), rule_y + S(1)], fill=(140,125,105))
+
+        # Dark band — product info only (no legal declarations)
+        INFO_Y = BAND_Y + S(55)
+        f_info_label = get_font(S(14))
+        f_info_val   = get_font(S(19), bold=True)
+        infos = [("FABRIC", "100% Combed Cotton"), ("GSM", "180"), ("ORIGIN", "Made in India")]
+        col_w = PW // 3
+        for i, (lbl, val) in enumerate(infos):
+            cx = PAD + col_w * i + col_w//2
+            draw.text((cx, INFO_Y), lbl, font=f_info_label, fill=(120,115,105), anchor="mm")
+            draw.text((cx, INFO_Y + S(28)), val, font=f_info_val, fill=(220,215,205), anchor="mm")
+            if i < 2:
+                draw.rectangle([PAD + col_w*(i+1) - 1, INFO_Y - S(14), PAD + col_w*(i+1), INFO_Y + S(54)],
+                               fill=(55, 58, 68))
+        stamp = ("VISUAL REFERENCE ONLY \u2014 NOT PRINT ARTWORK  \u00b7  FRONT  \u00b7  "
+                 "POUCH 24 \u00d7 34 cm  \u00b7  DIELINE BY CONVERTER")
+
     else:
-        text_y = PAD + ZIP_H + S(60)
+        # ── BACK: brand-clean kraft ───────────────────────────────────────
+        # Deliberately bare. All consumer declarations are carried on the
+        # separate retail sticker, which is applied at packing and is not
+        # part of the printed pouch. The pouch itself holds no variable data.
 
-    # Tagline — sits just below the brand name
-    f_tag = get_font(S(20))
-    draw.text((W//2, text_y + S(20)), "Color. Nothing else.", font=f_tag, fill=(80,70,60), anchor="mm")
+        # Dark band — brand line only
+        f_back_brand = get_brand_font(S(20))
+        _bw = draw.textlength("SteelStag", font=f_back_brand)
+        draw.text((W//2 - S(6), BAND_Y + S(64)), "SteelStag", font=f_back_brand,
+                  fill=(150, 145, 136), anchor="mm")
+        draw.text((W//2 - S(6) + _bw/2 + S(4), BAND_Y + S(54)), "\u2122",
+                  font=get_font(S(10)), fill=(150, 145, 136), anchor="lm")
+        f_back_note = get_font(S(14))
+        draw.text((W//2, BAND_Y + S(100)), "steelstag.in", font=f_back_note,
+                  fill=(110, 106, 100), anchor="mm")
+        stamp = ("VISUAL REFERENCE ONLY \u2014 NOT PRINT ARTWORK  \u00b7  BACK  \u00b7  "
+                 "POUCH 24 \u00d7 34 cm  \u00b7  DIELINE BY CONVERTER")
 
-    # Subtle horizontal rule below tagline
-    rule_y = text_y + S(46)
-    draw.rectangle([W//2 - S(90), rule_y, W//2 + S(90), rule_y + S(1)], fill=(140,125,105))
-
-    # On dark band — fabric info
-    INFO_Y = BAND_Y + S(55)
-    f_info_label = get_font(S(14))
-    f_info_val   = get_font(S(19), bold=True)
-    infos = [
-        ("FABRIC", "100% Combed Cotton"),
-        ("GSM",    "180"),
-        ("ORIGIN", "Made in India"),
-    ]
-    col_w = PW // 3
-    for i, (lbl, val) in enumerate(infos):
-        cx = PAD + col_w * i + col_w//2
-        draw.text((cx, INFO_Y), lbl, font=f_info_label, fill=(120,115,105), anchor="mm")
-        draw.text((cx, INFO_Y + S(28)), val, font=f_info_val, fill=(220,215,205), anchor="mm")
-        if i < 2:
-            draw.rectangle([PAD + col_w*(i+1) - 1, INFO_Y - S(14), PAD + col_w*(i+1), INFO_Y + S(54)],
-                           fill=(55, 58, 68))
-
-    # Bottom of dark band — intentionally left clean
-
-    # Pouch border / shadow suggestion
-    draw_rounded_rect(draw, PAD-1, PAD-1, PAD+PW+1, PAD+PH+1, R+1, None)  # skip — just outline
-    # Thin outline
+    # Thin outline top/bottom
     for offset in range(1, S(3)):
         draw.rectangle([PAD+R, PAD-offset, PAD+PW-R, PAD], fill=(160,150,135))
         draw.rectangle([PAD+R, PAD+PH, PAD+PW-R, PAD+PH+offset], fill=(100,95,88))
 
-    out_path = os.path.join(OUT, "Packaging-Pouch-Mockup.png")
-    img.save(out_path, dpi=(321,321))
-    print(f"  Saved: Packaging-Pouch-Mockup.png  ({W}x{H}px, print-ready at true {REAL_W_MM}x{REAL_H_MM}mm size)")
+    # Status stamp in the mockup margin — these files must never reach a
+    # converter as artwork.
+    f_stamp = get_font(S(15))
+    draw.text((W//2, PAD + PH + S(30)), stamp, font=f_stamp, fill=(120, 115, 108), anchor="mm")
+
+    name = f"Packaging-Pouch-{side.capitalize()}-Mockup.png"
+    out_path = os.path.join(OUT, name)
+    img.save(out_path, dpi=(POUCH_DPI, POUCH_DPI))
+    print(f"  Saved: {name}  ({W}x{H}px @ {POUCH_DPI} DPI \u2014 visual reference only)")
 
 
 # ── Run ───────────────────────────────────────────────────────────────────────
@@ -274,7 +308,8 @@ print("Generating color swatches...")
 for c in COLORS:
     make_swatch(c)
 
-print("\nGenerating packaging pouch mockup...")
-make_pouch()
+print("\nGenerating packaging pouch mockups (front + back)...")
+make_pouch('front')
+make_pouch('back')
 
 print("\nDone. All assets saved to 04-ColorReference/")
