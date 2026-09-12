@@ -45,6 +45,17 @@ label-viewer.html                       <- open in a browser: previews every
   SteelStag-Labels-PrintReady-v1.3.pdf   <- CONTROLLING PRINT ARTWORK
   -> 12 pages, one label per page. PRINT AT 100%. Do not scale or
      re-typeset.
+  -> TRUE VECTOR. All type is live text with embedded fonts; care
+     icons and rules are vector paths. Only the metallic logo is a
+     raster object inside it, which is correct - it is a
+     continuous-tone mark, not line art.
+     Type therefore renders at your RIP's own resolution, not at the
+     resolution of a supplied bitmap. Use this PDF, not the PNGs, for
+     anything with small type.
+  -> Colour space is RGB. Convert to your press CMYK profile at
+     prepress. For the small legal type on the retail sticker we
+     recommend converting black text to 100% K only, so it prints on
+     one plate and cannot misregister.
 
   Neck-Labels/    NeckLabel-S/M/L/XL-384dpi.png   (transparent background)
   Wash-Care/      WashCareLabel-384dpi.png

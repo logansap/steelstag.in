@@ -196,6 +196,24 @@ for m in re.finditer(rb'/MediaBox\s*\[([^\]]*)\]', raw):
     v = [float(x) for x in m.group(1).split()]
     boxes.append((round((v[2] - v[0]) / 72 * 25.4, 1), round((v[3] - v[1]) / 72 * 25.4, 1)))
 ck(len(boxes) == 12, f'Labels PDF has 12 pages (got {len(boxes)})')
+# The controlling artwork must be VECTOR. It was previously built from PNGs via
+# img2pdf -- 12 bitmaps, no text, no fonts -- so a 2400 dpi RIP upsampled 6.2x
+# and small legal type printed soft. Type must stay live and icons must stay
+# paths; only the metallic logo may be raster.
+import pymupdf as _lp
+_ld = _lp.open(PACK / '02-Labels' / 'SteelStag-Labels-PrintReady-v1.3.pdf')
+_ltxt = sum(len(_ld[i].get_text().strip()) for i in range(_ld.page_count))
+_lvec = sum(len(_ld[i].get_drawings()) for i in range(_ld.page_count))
+_limg = sum(len(_ld[i].get_images()) for i in range(_ld.page_count))
+_lfonts = {f[3] for i in range(_ld.page_count) for f in _ld[i].get_fonts()}
+ck(_ltxt > 800, f'Labels PDF carries live text, not bitmapped type ({_ltxt} chars)')
+ck(_lvec > 50, f'Labels PDF carries vector paths for icons and rules ({_lvec})')
+ck(len([f for f in _lfonts if f]) >= 2, f'Labels PDF embeds its fonts ({sorted(f for f in _lfonts if f)})')
+ck(_limg <= 6, f'Only the metallic logo is raster inside the PDF ({_limg} objects)')
+for _i in range(_ld.page_count):
+    ck(len(_ld[_i].get_text().strip()) > 0 or len(_ld[_i].get_drawings()) > 0,
+       f'Labels PDF p{_i+1} is not a flattened bitmap')
+_ld.close()
 
 def count_pages(nom_w, nom_h):
     return sum(1 for bw, bh in boxes

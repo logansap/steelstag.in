@@ -1,7 +1,13 @@
 """
 Renders each SteelStag label as a high-res PNG (4x = exactly 384 DPI)
 by screenshotting isolated HTML fragments via Playwright,
-then compiles them into a single print-ready PDF via img2pdf.
+and a page in the print-ready PDF written by Chromium's own PDF engine,
+so type stays LIVE TEXT with embedded fonts and icons stay vector paths.
+Only the metallic logo is raster inside it, which is correct for it.
+
+Earlier revisions built the PDF from the PNGs with img2pdf, flattening
+everything to bitmap: a 2400 dpi RIP then had to upsample 6.2x and small
+legal type came out soft. That is what this fixes.
 """
 import asyncio, math, os, subprocess, sys, threading
 from pathlib import Path
@@ -14,6 +20,7 @@ except ImportError:
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'img2pdf', '-q'])
     import img2pdf
 
+import pymupdf
 from PIL import Image
 from playwright.async_api import async_playwright
 
@@ -114,6 +121,7 @@ def page(w_mm, h_mm, body_css, html_body, bg='#ffffff', bleed_bg=None, bleed_sha
 <html><head><meta charset="UTF-8"/>
 <style>
 {SHARED_CSS}
+@page {{ size: {total_w}px {total_h}px; margin: 0; }}
 html, body {{ width: {total_w}px; height: {total_h}px; overflow: hidden; background: transparent; }}
 .bleedbg {{
   position: absolute;
@@ -412,6 +420,7 @@ async def render():
     async with async_playwright() as p:
         browser = await p.chromium.launch()
         png_files = []
+        pdf_pages = []
 
         for label in LABELS:
             # Substitute PORT into html strings
@@ -430,6 +439,11 @@ async def render():
             await page_obj.set_content(html, wait_until='networkidle')
             path = str(OUT / label.get('out', f"{label['name']}-384dpi.png"))
             await page_obj.screenshot(path=path, full_page=False, omit_background=(label.get('bg') == 'transparent'))
+            # Vector page at the exact finished size. CSS px map 1:1 to mm
+            # at 96 dpi, which is what PX already encodes.
+            pdf_pages.append(await page_obj.pdf(
+                margin={'top': '0', 'right': '0', 'bottom': '0', 'left': '0'},
+                print_background=True, prefer_css_page_size=True))
             await page_obj.close()
             # Screenshots carry no pHYs chunk, so any layout app assumes 72/96 DPI
             # and places the label at the wrong physical size. Stamp the real DPI.
@@ -441,21 +455,27 @@ async def render():
         await browser.close()
         server.shutdown()
 
-        # Combine into PDF
-        # PX*DPR = 3.7795 px/mm @96dpi * 4 = exactly 384 px/inch (25.4mm).
-        # None of these screenshots carry PNG DPI metadata, so img2pdf falls
-        # back to assuming 96 DPI per image when not told otherwise — for
-        # images it fails to size any other way, this silently shrinks the
-        # printed size to 4x too large / DPI to 4x too low (was the cause of
-        # blurry Wash Care Label / Hang Tag pages while Neck Label / Size
-        # Sticker happened to come out looking fine). Force the true DPI
-        # explicitly so every page is sized correctly.
-        true_dpi = TRUE_DPI
+        # Merge the per-label vector pages, in LABELS order.
         pdf_path = str(OUT / 'SteelStag-Labels-PrintReady-v1.3.pdf')
-        layout = img2pdf.get_fixed_dpi_layout_fun((true_dpi, true_dpi))
-        with open(pdf_path, 'wb') as f:
-            f.write(img2pdf.convert(png_files, layout_fun=layout))
-        print(f"PDF saved -> {pdf_path} (locked at {true_dpi:.1f} DPI)")
+        out_doc = pymupdf.open()
+        for blob in pdf_pages:
+            src = pymupdf.open('pdf', blob)
+            out_doc.insert_pdf(src)
+            src.close()
+        out_doc.set_metadata({
+            'title': 'SteelStag SS2026 - Print-Ready Labels',
+            'author': 'Anaishu Lifestyle Private Limited',
+            'subject': 'Controlling label artwork. Print at 100%. Do not scale.',
+        })
+        out_doc.save(pdf_path, garbage=3, deflate=True)
+        n_txt = sum(len(out_doc[i].get_text().strip()) for i in range(out_doc.page_count))
+        n_img = sum(len(out_doc[i].get_images()) for i in range(out_doc.page_count))
+        n_vec = sum(len(out_doc[i].get_drawings()) for i in range(out_doc.page_count))
+        pages = out_doc.page_count
+        out_doc.close()
+        print(f'PDF saved -> {pdf_path}')
+        print(f'   {pages} vector pages | live text {n_txt} chars | '
+              f'vector paths {n_vec} | raster objects (logo only) {n_img}')
 
 asyncio.run(render())
 
