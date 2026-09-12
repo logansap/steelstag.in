@@ -267,6 +267,21 @@ for p in sorted(PACK.rglob('*')):
 _ai = PACK / '03-Logo' / 'SteelStag-Logo.ai'
 ck(_ai.is_file(), 'Adobe Illustrator deliverable supplied (OD-07)')
 ck(_ai.read_bytes()[:4] == b'%PDF', '.ai is a real PDF-container Illustrator file, not a renamed raster')
+# Vector pouch artwork for the converter -- must be vector, correct panel
+# size, and must carry 3 mm bleed on every edge.
+import pymupdf
+for _side in ('Front', 'Back'):
+    _pa = PACK / '05-Packaging' / f'SteelStag-Pouch-{_side}-v1.3.ai'
+    ck(_pa.is_file(), f'Vector pouch artwork supplied: {_pa.name}')
+    ck(_pa.read_bytes()[:4] == b'%PDF', f'{_pa.name} is a real vector container')
+    _pd = pymupdf.open(_pa)
+    _r = _pd[0].rect
+    _w, _h = _r.width / 72 * 25.4, _r.height / 72 * 25.4
+    ck(abs(_w - 246) < 0.5 and abs(_h - 346) < 0.5,
+       f'{_pa.name} is 240x340mm + 3mm bleed (got {_w:.1f} x {_h:.1f})')
+    ck(len(_pd[0].get_text().strip()) > 20, f'{_pa.name} keeps type as live text')
+    ck(len(_pd[0].get_drawings()) > 5, f'{_pa.name} keeps its blocks as vector')
+    _pd.close()
 import pymupdf as _mu
 _aid = _mu.open(_ai)
 ck(_aid.page_count == 1, '.ai has a single artboard')

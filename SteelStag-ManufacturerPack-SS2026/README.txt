@@ -153,7 +153,8 @@ label-viewer.html                       <- open in a browser: previews every
 
   Packaging-Pouch-Front-Mockup.png
   Packaging-Pouch-Back-Mockup.png
-  -> VISUAL REFERENCE ONLY - NOT PRINT ARTWORK. The pouch dieline is
+  -> VISUAL REFERENCE ONLY - NOT PRINT ARTWORK. For production use the
+     vector artwork in 05-Packaging/ instead. The pouch dieline is
      produced by the pouch converter to manufacturer standard from the
      24 x 34 cm size and the two-tone layout in the Tech Pack.
   -> FRONT is brand only: the approved metallic mark printed directly
@@ -164,6 +165,31 @@ label-viewer.html                       <- open in a browser: previews every
      are printed into the pouch itself. The retail declaration sticker
      is applied at packing and is not part of the printed pouch, so
      the mockup shows the bare pouch.
+
+
+05-Packaging/
+  SteelStag-Pouch-Front-v1.3.ai
+  SteelStag-Pouch-Back-v1.3.ai
+  -> VECTOR POUCH ARTWORK for the converter. Adobe Illustrator files
+     (PDF container, as modern .ai is). Panel 240 x 340 mm with 3 mm
+     bleed on every edge - artboard 246 x 346 mm - and crop marks on
+     the trim line.
+  -> Type is live text with embedded fonts; the kraft ground, black
+     band, zip strip and banner are vector blocks. The metallic stag
+     is an embedded high-resolution raster, which is correct for it -
+     it is a continuous-tone mark, not line art.
+  -> These are BRAND LAYOUT files, NOT dielines. You produce the
+     dieline - gusset, seal zones, zip - to your own standard and
+     place this artwork on it.
+  -> Colour is RGB. Convert to your press profile at prepress.
+     Kraft #C8A96E, band #1A1A1A, split 65% / 35% as in the Tech Pack.
+  -> Do not re-typeset, recolour or rescale the logo. See the brand
+     rule in 03-Logo above.
+
+  Same disclosure as the logo .ai: these are true vector files that
+  open natively in Illustrator, but they do not carry Adobe's
+  proprietary private-data stream - only Illustrator itself writes
+  that, and it does so the first time you save.
 
 
 RETAIL DECLARATION STICKER - DO NOT PRINT PRODUCTION STICKERS YET

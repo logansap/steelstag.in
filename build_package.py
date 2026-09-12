@@ -11,6 +11,7 @@ if anything named in that manifest is missing.
 Run order for a full release:
     python render-labels-win.py        # 02-Labels artwork + print-ready PDF
     python generate_color_assets.py    # 04-ColorReference artwork
+    python generate_pouch_vector.py    # 05-Packaging vector pouch artwork
     python build_package.py --sync     # refresh manufacturer/assets from the pack
     python generate_techpack_pdf.py    # Tech Pack PDF (prints the portal page)
     python build_package.py            # build the ZIP
@@ -82,6 +83,9 @@ MANIFEST = [
     '04-ColorReference/05-Brown-Sugar.png',
     '04-ColorReference/Packaging-Pouch-Front-Mockup.png',
     '04-ColorReference/Packaging-Pouch-Back-Mockup.png',
+
+    '05-Packaging/SteelStag-Pouch-Front-v1.3.ai',
+    '05-Packaging/SteelStag-Pouch-Back-v1.3.ai',
 ]
 
 # Portal display assets, copied from the pack so the page and the package can
